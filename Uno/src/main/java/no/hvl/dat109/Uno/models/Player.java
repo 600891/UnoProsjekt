@@ -17,6 +17,12 @@ public class Player {
     private String name;
     private ArrayList<Card> hand;
 
+    public Player(Long id, String name, ArrayList<Card> hand){
+        this.id = id;
+        this.name = name;
+        this.hand = hand;
+    }
+
     public Long getId() {
         return id;
     }
