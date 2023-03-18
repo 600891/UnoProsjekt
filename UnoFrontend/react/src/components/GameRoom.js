@@ -89,7 +89,6 @@ const GameRoom = (props) => {
 
   // init socket state
   const [gameState, setGameState] = useState(null);
-  const [room, setRoom] = useState(testdata.gameID);
 
   // Create and connect to socket
   const connect = () => {
@@ -97,7 +96,7 @@ const GameRoom = (props) => {
       timeout: 10000,
       transports: ["websocket"],
     };
-    socket = new SockJS("uno/" + room, connectionOptions);
+    socket = new SockJS("uno/" + gameState.gameID, connectionOptions);
     stompClient = Stomp.over(socket);
     setGameState(testdata);
     console.log(gameState);
