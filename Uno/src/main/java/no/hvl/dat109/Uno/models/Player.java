@@ -1,7 +1,6 @@
 package no.hvl.dat109.Uno.models;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 
