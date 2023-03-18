@@ -91,9 +91,6 @@ const GameRoom = (props) => {
   const [gameState, setGameState] = useState(null);
   const [room, setRoom] = useState(testdata.gameID);
 
-  setGameState(testdata);
-  console.log(gameState);
-
   // Create and connect to socket
   const connect = () => {
     const connectionOptions = {
@@ -102,20 +99,22 @@ const GameRoom = (props) => {
     };
     socket = new SockJS("uno/" + room, connectionOptions);
     stompClient = Stomp.over(socket);
+    setGameState(testdata);
+    console.log(gameState);
     stompClient.connect({}, onConnected(), onError());
   };
 
   const onConnected = () => {
     console.log("onConnected");
     // Subscribe to the Public Topic
-    stompClient.subscribe("/topic/public", this.onMessageReceived);
+    stompClient.subscribe("/uno/" + gameState.gameID, this.onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send(
-      "/api/chat/addUser/1",
+    /*stompClient.send(
+      "/uno/" + gameState.gameID,
       {},
       JSON.stringify({ sender: "Ali", type: "JOIN" })
-    );
+    );*/
   };
 
   const onMessageReceived = (payload) => {
@@ -126,22 +125,22 @@ const GameRoom = (props) => {
   const onError = (error) => {
     this.setState({
       error:
-        "Could not connect you to the Chat Room Server. Please refresh this page and try again!",
+        "Could not connect you to the Uno Server. Please refresh this page and try again!",
     });
   };
 
   const sendMessage = (msg) => {
     var messageContent = "test";
     if (messageContent && stompClient) {
-      var chatMessage = {
-        sender: this.state.username,
+      var gameStateMessage = {
+        sender: this.state.name,
         content: "Heey there",
-        type: "CHAT",
+        type: "GAMESTATE",
       };
       stompClient.send(
-        "/api/chat/sendMessage/1",
-        { name: "Ali" },
-        JSON.stringify(chatMessage)
+        "/uno/" + gameState.gameID,
+        { name: yourPlayer.name },
+        JSON.stringify(gameStateMessage)
       );
     }
   };
