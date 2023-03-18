@@ -1,5 +1,6 @@
 {
   "gameID": 1,
+  "playerTurn": "player1",
   "player1": {
     "name": "Nora",
     "hand": [
