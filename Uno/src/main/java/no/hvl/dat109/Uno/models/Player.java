@@ -15,6 +15,8 @@ public class Player {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
+
+    @Transient // todo: remove this when card becomes entity
     private ArrayList<Card> hand;
 
     public Player(Long id, String name, ArrayList<Card> hand){

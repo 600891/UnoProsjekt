@@ -2,17 +2,12 @@ package no.hvl.dat109.Uno.models;
 
 import jakarta.persistence.Entity;
 
-/**
- *
- */
-@Entity
+// todo: this entity is missing the primary key reference (@Id)
+// @Entity
 public class Card {
 
     Color color;
 
-    /**
-     * @param color
-     */
     public Card(Color color) {
         this.color = color;
     }
@@ -24,4 +19,5 @@ public class Card {
     public void setColor(Color color) {
         this.color = color;
     }
+
 }
