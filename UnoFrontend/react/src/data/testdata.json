@@ -1,0 +1,66 @@
+{
+  "gameID": 1,
+  "playerTurn": "player1",
+  "player1": {
+    "name": "Nora",
+    "hand": [
+      {
+        "cardColor": "red",
+        "cardValue": "zero"
+      },
+      {
+        "cardColor": "blue",
+        "cardValue": "skip"
+      },
+      {
+        "cardColor": "blue",
+        "cardValue": "skip"
+      }
+    ]
+  },
+  "player2": {
+    "name": "Stian",
+    "hand": [
+      {
+        "cardColor": "blue",
+        "cardValue": "five"
+      },
+      {
+        "cardColor": "black",
+        "cardValue": "wild"
+      },
+      {
+        "cardColor": "blue",
+        "cardValue": "skip"
+      }
+    ]
+  },
+  "deck": [
+    {
+      "cardColor": "blue",
+      "cardValue": "five"
+    },
+    {
+      "cardColor": "black",
+      "cardValue": "wild"
+    },
+    {
+      "cardColor": "blue",
+      "cardValue": "skip"
+    }
+  ],
+  "discard": [
+    {
+      "cardColor": "blue",
+      "cardValue": "five"
+    },
+    {
+      "cardColor": "black",
+      "cardValue": "wild"
+    },
+    {
+      "cardColor": "blue",
+      "cardValue": "skip"
+    }
+  ]
+}
