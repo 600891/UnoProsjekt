@@ -3,6 +3,7 @@ package no.hvl.dat109.Uno.models;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Player has a hand, a name and id.
@@ -15,9 +16,11 @@ public class Player {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
-    private ArrayList<Card> hand;
 
-    public Player(Long id, String name, ArrayList<Card> hand){
+    @Transient // todo: remove this when card becomes entity
+    private List<Card> hand;
+
+    public Player(Long id, String name, List<Card> hand){
         this.id = id;
         this.name = name;
         this.hand = hand;
@@ -35,8 +38,8 @@ public class Player {
 
     public void setName(String name){ this.name = name; }
 
-    public ArrayList<Card> getHand(){ return hand;}
+    public List<Card> getHand(){ return hand;}
 
-    public void setHand(ArrayList<Card> hand){ this.hand = hand; }
+    public void setHand(List<Card> hand){ this.hand = hand; }
 
 }
