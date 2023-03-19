@@ -2,8 +2,10 @@ package no.hvl.dat109.Uno.models;
 
 import jakarta.persistence.Entity;
 
+//TODO: koble klassen opp til databasen og legge til aktuelle linjer får at det skal bli en valid entityklasse
 /**
  *
+ * The implementation of a card-object used to create a deck of cards
  */
 @Entity
 public class Card {
@@ -17,14 +19,23 @@ public class Card {
         this.color = color;
     }
 
+    /**
+     * @return Color of a card
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * @param color
+     */
     public void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * @Return String
+     */
     @Override
     public String toString() {
         return color + "";
@@ -35,6 +46,9 @@ public class Card {
         return super.hashCode();
     }
 
+    /**
+     * @Return boolean
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -45,11 +59,7 @@ public class Card {
             return false;
         }
 
-        final Card card = (Card) obj;
-        if (this.getColor() != card.getColor()) {
-            return false;
-        }
-
-        return true;
+        Card card = (Card) obj;
+        return this.getColor() == card.getColor();
     }
 }
