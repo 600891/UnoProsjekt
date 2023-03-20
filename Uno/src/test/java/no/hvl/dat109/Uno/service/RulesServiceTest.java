@@ -34,7 +34,7 @@ public class RulesServiceTest {
     @ParameterizedTest
     @MethodSource("playableCardPairs")
     void playableCardColorTest(Card card, Card otherCard){
-        Assertions.assertTrue(ruleService.isCardPlayable(card, otherCard));
+        Assertions.assertTrue(CardRuleService.isCardPlayable(card, otherCard));
     }
 
     private static Stream<Arguments> unplayableCardCombinations() {
@@ -49,9 +49,9 @@ public class RulesServiceTest {
     @ParameterizedTest
     @MethodSource("unplayableCardCombinations")
     void unplayableCardColorTest(Card cardOne, Card cardTwo, Card cardThree, Card cardOnTable) {
-        Assertions.assertFalse(ruleService.isCardPlayable(cardOne, cardOnTable));
-        Assertions.assertFalse(ruleService.isCardPlayable(cardTwo, cardOnTable));
-        Assertions.assertFalse(ruleService.isCardPlayable(cardThree, cardOnTable));
+        Assertions.assertFalse(CardRuleService.isCardPlayable(cardOne, cardOnTable));
+        Assertions.assertFalse(CardRuleService.isCardPlayable(cardTwo, cardOnTable));
+        Assertions.assertFalse(CardRuleService.isCardPlayable(cardThree, cardOnTable));
     }
 
 }
