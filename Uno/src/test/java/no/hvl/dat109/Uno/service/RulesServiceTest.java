@@ -15,10 +15,10 @@ import static no.hvl.dat109.Uno.models.Color.*;
 @SpringBootTest
 public class RulesServiceTest {
 
-    private final RuleService ruleService;
+    private final CardRuleService ruleService;
 
     @Autowired
-     public RulesServiceTest(RuleService ruleService){
+     public RulesServiceTest(CardRuleService ruleService){
          this.ruleService = ruleService;
      }
 

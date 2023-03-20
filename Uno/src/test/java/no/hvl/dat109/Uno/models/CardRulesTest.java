@@ -1,7 +1,6 @@
 package no.hvl.dat109.Uno.models;
 
 import no.hvl.dat109.Uno.service.CardRuleService;
-import no.hvl.dat109.Uno.service.RuleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
