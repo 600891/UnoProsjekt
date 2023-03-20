@@ -4,7 +4,7 @@ import no.hvl.dat109.Uno.models.Card;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RuleService {
+public class CardRuleService {
 
     /**
      * Checks if the card a player wants to play is playable.
@@ -12,7 +12,7 @@ public class RuleService {
      * @param cardOnTable the card at the top of the card stack of played cards on the table
      * @return true if card is playable and false if card is not playable
      */
-    public boolean isCardPlayable(Card cardToPlay, Card cardOnTable) {
+    public static boolean isCardPlayable(Card cardToPlay, Card cardOnTable) {
         return cardToPlay.getColor().equals(cardOnTable.getColor());
     }
 
