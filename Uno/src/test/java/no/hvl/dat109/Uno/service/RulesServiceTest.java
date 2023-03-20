@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.Stream;
 
-import static no.hvl.dat109.Uno.models.Color.*;
+import static no.hvl.dat109.Uno.models.ColorEnum.*;
 
 @SpringBootTest
 public class RulesServiceTest {

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 class CardTest {
 
-    Card blueCard = new Card(Color.BLUE);
-    Card redCard = new Card(Color.RED);
+    Card blueCard = new Card(ColorEnum.BLUE);
+    Card redCard = new Card(ColorEnum.RED);
 
 
     @BeforeEach
@@ -17,18 +17,18 @@ class CardTest {
 
     @Test
     void getColor() {
-        Assertions.assertEquals(blueCard.getColor(), Color.BLUE);
-        Assertions.assertNotEquals(redCard.getColor(), Color.YELLOW);
+        Assertions.assertEquals(blueCard.getColor(), ColorEnum.BLUE);
+        Assertions.assertNotEquals(redCard.getColor(), ColorEnum.YELLOW);
     }
 
     @Test
     void setColor() {
-        Card newCard = new Card(Color.BLUE);
-        Assertions.assertEquals(newCard.getColor(), Color.BLUE);
-        newCard.setColor(Color.YELLOW);
-        Assertions.assertEquals(newCard.getColor(), Color.YELLOW);
-        newCard.setColor(Color.GREEN);
-        Assertions.assertNotEquals(newCard.getColor(), Color.YELLOW);
+        Card newCard = new Card(ColorEnum.BLUE);
+        Assertions.assertEquals(newCard.getColor(), ColorEnum.BLUE);
+        newCard.setColor(ColorEnum.YELLOW);
+        Assertions.assertEquals(newCard.getColor(), ColorEnum.YELLOW);
+        newCard.setColor(ColorEnum.GREEN);
+        Assertions.assertNotEquals(newCard.getColor(), ColorEnum.YELLOW);
 
     }
 }

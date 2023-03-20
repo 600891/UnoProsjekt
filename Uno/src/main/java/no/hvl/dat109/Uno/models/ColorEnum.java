@@ -3,7 +3,7 @@ package no.hvl.dat109.Uno.models;
 /**
  *  Colors that can be used in a card
  */
-public enum Color {
+public enum ColorEnum {
 
     /**
      * Blue color

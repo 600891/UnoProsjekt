@@ -1,23 +1,21 @@
 package no.hvl.dat109.Uno.models;
 
-import jakarta.persistence.Entity;
-
 // todo: this entity is missing the primary key reference (@Id)
 // @Entity
 public class Card {
 
-    Color color;
+    ColorEnum colorEnum;
 
-    public Card(Color color) {
-        this.color = color;
+    public Card(ColorEnum colorEnum) {
+        this.colorEnum = colorEnum;
     }
 
-    public Color getColor() {
-        return color;
+    public ColorEnum getColor() {
+        return colorEnum;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setColor(ColorEnum colorEnum) {
+        this.colorEnum = colorEnum;
     }
 
 }
