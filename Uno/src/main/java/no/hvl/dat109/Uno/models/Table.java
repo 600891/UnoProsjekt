@@ -16,8 +16,13 @@ public class Table {
     private List<Card> discardPile;
     private List<Card> deck;
 
+    
+
     @Autowired
     DatabaseService databaseService;
+
+
+// Garantert noen av disse metodene som ikke skal brukes, men her er en gråv skisse på hva som må gjøres.
 
     public Table() {
 
