@@ -37,7 +37,14 @@
   }
 }
 
-/* Game.js Background */
+/* GameRoom.js parent div */
+.Game {
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+}
+
+/* GameRoom.js Background */
 .backgroundColorred {
   background-image: url("./assets/backgrounds/bgR.png");
 }

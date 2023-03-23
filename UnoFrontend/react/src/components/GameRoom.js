@@ -113,17 +113,15 @@ const GameRoom = (props) => {
       <div>
         {yourPlayerHand && (
           <div className="yourPlayer">
-            <p className="playerDeckText">You</p>
+            <p className="playerDeckText">{yourPlayer}</p>
             {yourPlayerHand.map((item, i) => (
               <img
                 key={i}
                 className="Card"
                 onClick={() => onCardPlayedHandler(item)}
-                src={
-                  require(`../assets/cards-front/${
-                    item.cardValue + item.cardColor
-                  }.png`).default
-                }
+                src={require(`../assets/cards-front/${
+                  item.cardValue + item.cardColor
+                }.png`)}
               />
             ))}
           </div>
