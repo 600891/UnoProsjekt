@@ -19,17 +19,40 @@ public class Table {
     @Autowired
     DatabaseService databaseService;
 
-    public Table(int countOfPlayers, Long id, String name) {
+    public Table() {
 
 
 
-        for (int i = 0; i < countOfPlayers; i++) {
-            //Lage en med alle spillerene med key spillerX
-            ArrayList<Card> hand = new ArrayList<>();
-            players.add(databaseService.createPlayer(id, name, hand));
-
-        }
+        
     }
+
+    private makePlayers() {
+
+    }
+
+    public Card playCard() {}
+
+    private makeDecks() {}
+    
+    private makeCardDeck() {}
+
+    private makeDiscardPile() {}
+
+    private writeToDatabase() {}
+
+    private sendToFrontEnd() {}
+
+    private hasUno() {}
+
+    private hasWon() {}
+
+    private countPoints() {}
+
+    
+
+
+
+
 
 
 

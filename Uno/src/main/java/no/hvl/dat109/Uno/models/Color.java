@@ -20,5 +20,9 @@ public enum Color {
     /**
      * Yellow color
      */
-    YELLOW
+    YELLOW,
+    /**
+     * Black color
+     */
+    BLACK
 }
