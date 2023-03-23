@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useAuthContext from "../auth/AuthContext";
 
 function Login() {
-    const [userName, setUsername] = useState("");
-    const navigate = useNavigate();
+  const [user, setUser] = useAuthContext();
+  const navigate = useNavigate();
 
-    const login = () => {
-        console.log("Bruker trykket login med brukernavn:" + userName)
+  const login = () => {
+    console.log("Bruker trykket login med brukernavn:" + userName);
 
-        navigate("/lobby",{
-            state:{ userName: userName}
+    navigate("/lobby", {
+      state: { userName: userName },
+    });
+  };
 
-        })
+  return (
+    <div>
+      <h1>Choose a username for this UNO game</h1>
+      <input
+        value={userName}
+        onChange={(e) => setUsername(e.target.value)}
+      ></input>
 
-    }
-
-    return (
-
-        <div>
-            <h1>Choose a username for this UNO game</h1>
-            <input value={userName} onChange={(e) => setUsername(e.target.value)}></input>
-
-            <button onClick={login}>trykk for å logge inn i UNO</button>
-        </div>
-    )
-
+      <button onClick={login}>trykk for å logge inn i UNO</button>
+    </div>
+  );
 }
 
 export default Login;

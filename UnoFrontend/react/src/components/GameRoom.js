@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import Stomp from "react-stomp";
 
+const ENDPOINT = "http://localhost:8080";
+
 const GameRoom = (props) => {
   // Mock JSON for testing
   const testdata = {
@@ -96,7 +98,7 @@ const GameRoom = (props) => {
       timeout: 10000,
       transports: ["websocket"],
     };
-    socket = new SockJS("uno/" + gameState.gameID, connectionOptions);
+    socket = new SockJS(ENDPOINT, connectionOptions);
     stompClient = Stomp.over(socket);
     setGameState(testdata);
     console.log(gameState);
@@ -105,9 +107,15 @@ const GameRoom = (props) => {
 
   const onConnected = () => {
     console.log("onConnected");
-    // Subscribe to the Public Topic
-    stompClient.subscribe("/uno/" + gameState.gameID, this.onMessageReceived);
-
+    // Subscribe to the Game Room API
+    stompClient.subscribe(
+      ENDPOINT + "/gameroom/" + gameState.gameID,
+      this.onMessageReceived
+    );
+    stompClient.subscribe(
+      ENDPOINT + "/api/gameroom/" + gameState.gameID,
+      this.onMessageReceived
+    );
     // Tell your username to the server
     /*stompClient.send(
       "/uno/" + gameState.gameID,
