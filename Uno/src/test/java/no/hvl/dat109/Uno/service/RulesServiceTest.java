@@ -1,6 +1,6 @@
 package no.hvl.dat109.Uno.service;
 
-import no.hvl.dat109.Uno.models.Card;
+import no.hvl.dat109.Uno.persistence.entity.Card;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.Stream;
 
-import static no.hvl.dat109.Uno.models.ColorEnum.*;
+import static no.hvl.dat109.Uno.enums.ColorEnum.*;
 
 @SpringBootTest
 public class RulesServiceTest {

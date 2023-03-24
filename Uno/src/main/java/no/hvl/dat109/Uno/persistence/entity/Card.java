@@ -1,4 +1,6 @@
-package no.hvl.dat109.Uno.models;
+package no.hvl.dat109.Uno.persistence.entity;
+
+import no.hvl.dat109.Uno.enums.ColorEnum;
 
 // todo: this entity is missing the primary key reference (@Id)
 // @Entity

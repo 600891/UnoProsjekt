@@ -1,5 +1,5 @@
 package no.hvl.dat109.Uno.api;
 
-public record JoinResponse(
+public record JoinLobbyResponse(
     String content
 ) { }

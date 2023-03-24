@@ -1,6 +1,6 @@
 package no.hvl.dat109.Uno.service;
 
-import no.hvl.dat109.Uno.models.Card;
+import no.hvl.dat109.Uno.persistence.entity.Card;
 import org.springframework.stereotype.Service;
 
 @Service

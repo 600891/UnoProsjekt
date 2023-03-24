@@ -1,4 +1,4 @@
-package no.hvl.dat109.Uno.models;
+package no.hvl.dat109.Uno.enums;
 
 /**
  *  Colors that can be used in a card

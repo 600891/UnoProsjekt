@@ -1,6 +1,6 @@
 package no.hvl.dat109.Uno.service;
 
-import no.hvl.dat109.Uno.repository.PlayerRepo;
+import no.hvl.dat109.Uno.persistence.repository.PlayerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

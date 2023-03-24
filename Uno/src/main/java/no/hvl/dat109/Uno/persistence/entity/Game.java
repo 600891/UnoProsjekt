@@ -1,12 +1,19 @@
-package no.hvl.dat109.Uno.models;
+package no.hvl.dat109.Uno.persistence.entity;
+
+import no.hvl.dat109.Uno.enums.GameStateEnum;
 
 import java.util.List;
-
+//@Entity
 public class Game {
 
+    //@Id
+    //@Column(name = "id")
     private String uuid;
+    //@Column(name = "players")
     private List<Player> players;
+    //@Column(name = "active_player")
     private Player activePlayer;
+    //@Column(name = "game_state")
     private GameStateEnum gameState;
 
     public String getUuid() {

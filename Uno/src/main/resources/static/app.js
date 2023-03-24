@@ -15,7 +15,7 @@ function setConnected(connected) {
 function connect() {
     var socket = new SockJS('/uno');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
+    stompClient.connect({'username': $("#name").val()}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/user/topic/reply', function (greeting) {
@@ -35,8 +35,8 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.send("/app/join", {}, JSON.stringify({'name': $("#name").val()}));
+function sendInput() {
+    stompClient.send("/app/join", {}, JSON.stringify({'input': $("#input").val()}));
 }
 
 function showGreeting(message) {
@@ -49,5 +49,33 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $( "#send" ).click(function() { sendInput(); });
 });
+
+//var stompClient = null;
+//
+//function connect(username) {
+//    var socket = new SockJS('/uno');
+//    stompClient = Stomp.over(socket);
+//    stompClient.connect({ username: username, }, function() {
+//        console.log('Web Socket is connected');
+//        stompClient.subscribe('/users/topic/reply', function(message) {
+//            $("#message").append("<tr><td>" + message.body + "</td></tr>");
+//        });
+//        stompClient.subscribe('/topic/foo', function(message) {
+//            $("#message").append("<tr><td>" + message.body + "</td></tr>");
+//        });
+//    });
+//}
+//
+//$(function() {
+//    $("form").on('submit', function(e) {
+//        e.preventDefault();
+//    });
+//    $("#connect").click(function() {
+//        connect($("#username").val());
+//    });
+//    $("#send").click(function() {
+//        stompClient.send("/app/join", {}, $("#input").val());
+//    });
+//});

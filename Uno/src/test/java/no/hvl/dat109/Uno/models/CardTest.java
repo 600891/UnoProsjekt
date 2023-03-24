@@ -1,5 +1,7 @@
 package no.hvl.dat109.Uno.models;
 
+import no.hvl.dat109.Uno.enums.ColorEnum;
+import no.hvl.dat109.Uno.persistence.entity.Card;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
