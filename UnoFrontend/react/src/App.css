@@ -36,3 +36,34 @@
     transform: rotate(360deg);
   }
 }
+
+/* GameRoom.js parent div */
+.Game {
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+}
+
+/* GameRoom.js Background */
+.backgroundColorred {
+  background-image: url("./assets/backgrounds/bgR.png");
+}
+
+.backgroundColorgreen {
+  background-image: url("./assets/backgrounds/bgG.png");
+}
+
+.backgroundColorblue {
+  background-image: url("./assets/backgrounds/bgB.png");
+}
+
+.backgroundColoryellow {
+  background-image: url("./assets/backgrounds/bgY.png");
+}
+
+/* UNO Cards */
+.Card {
+  width: 6rem;
+  margin: 2px;
+  cursor: pointer;
+}

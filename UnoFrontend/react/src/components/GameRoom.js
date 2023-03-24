@@ -2,76 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import Stomp from "react-stomp";
+import testData from "../data/testdata.json";
+
+const ENDPOINT = "http://localhost:8080";
 
 const GameRoom = (props) => {
-  // Mock JSON for testing
-  const testdata = {
-    gameID: 1,
-    playerTurn: "player1",
-    player1: {
-      name: "Nora",
-      hand: [
-        {
-          cardColor: "red",
-          cardValue: "zero",
-        },
-        {
-          cardColor: "blue",
-          cardValue: "skip",
-        },
-        {
-          cardColor: "blue",
-          cardValue: "skip",
-        },
-      ],
-    },
-    player2: {
-      name: "Stian",
-      hand: [
-        {
-          cardColor: "blue",
-          cardValue: "five",
-        },
-        {
-          cardColor: "black",
-          cardValue: "wild",
-        },
-        {
-          cardColor: "blue",
-          cardValue: "skip",
-        },
-      ],
-    },
-    deck: [
-      {
-        cardColor: "blue",
-        cardValue: "five",
-      },
-      {
-        cardColor: "black",
-        cardValue: "wild",
-      },
-      {
-        cardColor: "blue",
-        cardValue: "skip",
-      },
-    ],
-    discard: [
-      {
-        cardColor: "blue",
-        cardValue: "five",
-      },
-      {
-        cardColor: "black",
-        cardValue: "wild",
-      },
-      {
-        cardColor: "blue",
-        cardValue: "skip",
-      },
-    ],
-  };
-
+  // Get data from mock JSON for testing
+  const data = testData;
   // **********
   // NAVIGATION
   // **********
@@ -89,45 +26,42 @@ const GameRoom = (props) => {
 
   // init socket state
   const [gameState, setGameState] = useState(null);
-
   // Create and connect to socket
-  const connect = () => {
+
+  /*const connect = () => {
     const connectionOptions = {
       timeout: 10000,
       transports: ["websocket"],
     };
-    socket = new SockJS("uno/" + gameState.gameID, connectionOptions);
+    socket = new SockJS(ENDPOINT, connectionOptions);
     stompClient = Stomp.over(socket);
-    setGameState(testdata);
+    setGameState(data);
     console.log(gameState);
     stompClient.connect({}, onConnected(), onError());
-  };
+  };*/
 
   const onConnected = () => {
     console.log("onConnected");
-    // Subscribe to the Public Topic
-    stompClient.subscribe("/uno/" + gameState.gameID, this.onMessageReceived);
-
-    // Tell your username to the server
-    /*stompClient.send(
-      "/uno/" + gameState.gameID,
-      {},
-      JSON.stringify({ sender: "Ali", type: "JOIN" })
-    );*/
+    // Subscribe to the Game Room API
+    stompClient.subscribe(
+      ENDPOINT + "/gameroom/" + gameState.gameID,
+      this.onMessageReceived
+    );
+    stompClient.subscribe(
+      ENDPOINT + "/api/gameroom/" + gameState.gameID,
+      this.onMessageReceived
+    );
   };
-
   const onMessageReceived = (payload) => {
     console.log("onMessageReceived");
     var message = JSON.parse(payload.body);
   };
-
   const onError = (error) => {
     this.setState({
       error:
         "Could not connect you to the Uno Server. Please refresh this page and try again!",
     });
   };
-
   const sendMessage = (msg) => {
     var messageContent = "test";
     if (messageContent && stompClient) {
@@ -149,26 +83,49 @@ const GameRoom = (props) => {
   // **********
 
   const [yourPlayer, setYourPlayer] = useState("");
-  const [yourPlayerHand, setYourPlayerHand] = useState([]);
+  const [yourPlayerHand, setYourPlayerHand] = useState(null);
+  const [currentColor, setCurrentColor] = useState("");
 
   const onCardPlayedHandler = (played_card) => {};
 
+  // Runs once on component mount, sets up game data from initial game state
+  useEffect(() => {
+    setGameState(data);
+
+    //setYourPlayer(gameState.player1.name);
+    //setYourPlayerHand(gameState.player1.hand);
+    //setCurrentColor(gameState.discard.at(0));
+  }, []);
+
+  useEffect(() => {
+    if (gameState != null) {
+      console.log(gameState);
+      setYourPlayer(gameState.player1.name);
+      setYourPlayerHand(gameState.player1.hand);
+      setCurrentColor(gameState.discard.at(0).cardColor);
+    }
+  }, [gameState]);
+
   return (
-    <div>
+    <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
       <div>
-        <div className="yourPlayer">
-          <p className="playerDeckText">You</p>
-          {yourPlayerHand.map((item, i) => (
-            <img
-              key={i}
-              className="Card"
-              onClick={() => onCardPlayedHandler(item)}
-              src={require(`../assets/cards-front/${item}.png`).default}
-            />
-          ))}
-        </div>
+        {yourPlayerHand && (
+          <div className="yourPlayer">
+            <p className="playerDeckText">{yourPlayer}</p>
+            {yourPlayerHand.map((item, i) => (
+              <img
+                key={i}
+                className="Card"
+                onClick={() => onCardPlayedHandler(item)}
+                src={require(`../assets/cards-front/${
+                  item.cardValue + item.cardColor
+                }.png`)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
