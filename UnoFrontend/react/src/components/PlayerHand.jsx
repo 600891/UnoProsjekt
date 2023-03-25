@@ -18,7 +18,7 @@ const PlayerHand = ({ name, hand, changeCards, currentTopCard }) => {
       if (played_card.cardColor === "black") {
         //ask for new color
         currentColor = prompt(
-          "Enter the color you want to change to (blue, red, green, yellow"
+          "Enter the color you want to change to (blue, red, green, yellow)"
         ).toLowerCase();
       }
     }
