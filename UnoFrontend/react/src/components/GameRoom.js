@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PlayerHand from "./PlayerHand";
+import DiscardPile from "./DiscardPile";
 import SockJS from "sockjs-client";
 import Stomp from "react-stomp";
 import testData from "../data/testdata.json";
@@ -84,9 +86,7 @@ const GameRoom = (props) => {
 
   const [yourPlayer, setYourPlayer] = useState("");
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
-  const [currentColor, setCurrentColor] = useState("");
-
-  const onCardPlayedHandler = (played_card) => {};
+  const [currentTopCard, setCurrentTopCard] = useState("");
 
   // Runs once on component mount, sets up game data from initial game state
   useEffect(() => {
@@ -102,31 +102,23 @@ const GameRoom = (props) => {
       console.log(gameState);
       setYourPlayer(gameState.player1.name);
       setYourPlayerHand(gameState.player1.hand);
-      setCurrentColor(gameState.discard.at(0).cardColor);
+      setCurrentTopCard(gameState.discard[gameState.discard.length - 1]);
     }
   }, [gameState]);
 
   return (
-    <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
+    <div
+      className={`Game backgroundColorR backgroundColor${currentTopCard.cardColor}`}
+    >
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
-      <div>
-        {yourPlayerHand && (
-          <div className="yourPlayer">
-            <p className="playerDeckText">{yourPlayer}</p>
-            {yourPlayerHand.map((item, i) => (
-              <img
-                key={i}
-                className="Card"
-                onClick={() => onCardPlayedHandler(item)}
-                src={require(`../assets/cards-front/${
-                  item.cardValue + item.cardColor
-                }.png`)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      <DiscardPile></DiscardPile>
+      <PlayerHand
+        name={yourPlayer}
+        hand={yourPlayerHand}
+        changeCards={setYourPlayerHand}
+        currentTopCard={currentTopCard}
+      ></PlayerHand>
     </div>
   );
 };
