@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PlayerHand from "./PlayerHand";
 import DiscardPile from "./DiscardPile";
 import SockJS from "sockjs-client";
-import Stomp from "react-stomp";
+import Stomp from "stompjs";
 import testData from "../data/testdata.json";
 
 const ENDPOINT = "http://localhost:8080";
@@ -30,17 +30,18 @@ const GameRoom = (props) => {
   const [gameState, setGameState] = useState(null);
   // Create and connect to socket
 
-  /*const connect = () => {
-    const connectionOptions = {
-      timeout: 10000,
-      transports: ["websocket"],
-    };
-    socket = new SockJS(ENDPOINT, connectionOptions);
+  useEffect(() => {
+    socket = new WebSocket("ws://localhost:8080/");
     stompClient = Stomp.over(socket);
-    setGameState(data);
-    console.log(gameState);
-    stompClient.connect({}, onConnected(), onError());
-  };*/
+
+    stompClient.connect({}, () => {
+      console.log("Connected to the websocket server");
+
+      stompClient.subscribe("/gameroom/1", (message) => {
+        console.log("Received message:", message);
+      });
+    });
+  }, []);
 
   const onConnected = () => {
     console.log("onConnected");
