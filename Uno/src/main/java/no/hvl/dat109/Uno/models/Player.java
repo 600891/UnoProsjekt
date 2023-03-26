@@ -26,6 +26,10 @@ public class Player {
         this.hand = hand;
     }
 
+    public Player() {
+
+    }
+
     public Long getId() {
         return id;
     }
