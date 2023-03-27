@@ -9,6 +9,9 @@ public class Game {
     //@Id
     //@Column(name = "id")
     private String uuid;
+
+    private Player gameCreator;
+
     //@Column(name = "players")
     private List<Player> players;
     //@Column(name = "active_player")
@@ -22,6 +25,14 @@ public class Game {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public Player getGameCreator() {
+        return gameCreator;
+    }
+
+    public void setGameCreator(Player gameCreator) {
+        this.gameCreator = gameCreator;
     }
 
     public List<Player> getPlayers() {

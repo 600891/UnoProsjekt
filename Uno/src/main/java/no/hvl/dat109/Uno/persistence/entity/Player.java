@@ -19,6 +19,8 @@ public class Player {
     @Transient // todo: remove this when card becomes entity
     private ArrayList<Card> hand;
 
+    public Player() {/*default contructor*/}
+
     public Player(Long id, String name, ArrayList<Card> hand){
         this.id = id;
         this.name = name;

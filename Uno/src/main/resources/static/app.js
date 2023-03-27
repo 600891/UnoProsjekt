@@ -18,11 +18,12 @@ function connect() {
     stompClient.connect({'username': $("#name").val()}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/user/topic/reply', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
+        stompClient.subscribe('/user/topic/lobby', function (greeting) {
+            showGreeting(greeting.body);
         });
-        stompClient.subscribe('/topic/foo', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
+        stompClient.subscribe('/topic/lobby', function (response) {
+//            var parsedResponse = JSON.parse(response.body);
+            showGreeting(response.body);
         });
     });
 }
@@ -39,6 +40,14 @@ function sendInput() {
     stompClient.send("/app/join", {}, JSON.stringify({'input': $("#input").val()}));
 }
 
+function createGame() {
+    stompClient.send("/app/lobby/game/create", {}, {});
+}
+
+function lobby() {
+    stompClient.send("/app/lobby", {}, {});
+}
+
 function showGreeting(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
@@ -49,33 +58,8 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendInput(); });
+    $( "#send" ).click(function() { createGame(); });
+    $( "#join-lobby" ).click(function() { lobby(); });
+    //$( "#send" ).click(function() { sendInput(); });
 });
 
-//var stompClient = null;
-//
-//function connect(username) {
-//    var socket = new SockJS('/uno');
-//    stompClient = Stomp.over(socket);
-//    stompClient.connect({ username: username, }, function() {
-//        console.log('Web Socket is connected');
-//        stompClient.subscribe('/users/topic/reply', function(message) {
-//            $("#message").append("<tr><td>" + message.body + "</td></tr>");
-//        });
-//        stompClient.subscribe('/topic/foo', function(message) {
-//            $("#message").append("<tr><td>" + message.body + "</td></tr>");
-//        });
-//    });
-//}
-//
-//$(function() {
-//    $("form").on('submit', function(e) {
-//        e.preventDefault();
-//    });
-//    $("#connect").click(function() {
-//        connect($("#username").val());
-//    });
-//    $("#send").click(function() {
-//        stompClient.send("/app/join", {}, $("#input").val());
-//    });
-//});
