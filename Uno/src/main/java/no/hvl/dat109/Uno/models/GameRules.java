@@ -1,5 +1,6 @@
 package no.hvl.dat109.Uno.models;
 
+import no.hvl.dat109.Uno.enums.ColorEnum;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public class GameRules {
     private static final int TOTCARDS = 112;
     private static final int STARTCARDCOUNT = 7;
-    private static List<Color> colors = List.of(Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW);
+    private static List<ColorEnum> colors = List.of(ColorEnum.BLUE, ColorEnum.RED, ColorEnum.GREEN, ColorEnum.YELLOW);
 
 
     
@@ -19,9 +20,11 @@ public class GameRules {
      */
     public static List<Card> generateDeck() {
         List<Card> deck = new ArrayList<>();
-        for (Color color: colors) {
+        int idCount = 1;
+        for (ColorEnum color: colors) {
             for (int i = 0; i < TOTCARDS/colors.size(); i++) {
-                deck.add(new Card(color));
+                deck.add(new Card(idCount, color));
+                idCount++;
             }
         }
         Collections.shuffle(deck);
