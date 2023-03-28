@@ -28,7 +28,11 @@ public enum ColorEnum {
      */
     BLACK;
 
-    public static List<ColorEnum> getColors() {
+    public static List<ColorEnum> getAllColors() {
         return List.of(ColorEnum.BLUE, ColorEnum.GREEN, ColorEnum.RED, ColorEnum.YELLOW, ColorEnum.BLACK);
+    }
+
+    public static List<ColorEnum> getColors() {
+        return List.of(ColorEnum.BLUE, ColorEnum.GREEN, ColorEnum.RED, ColorEnum.YELLOW);
     }
 }
