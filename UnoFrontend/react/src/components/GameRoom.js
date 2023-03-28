@@ -89,7 +89,7 @@ const GameRoom = (props) => {
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
   const [currentTopCard, setCurrentTopCard] = useState("");
   const [discardPile, setDiscardPile] = useState("");
-
+  const [currentColor, setCurrentColor] = useState("");
   // Runs once on component mount, sets up game data from initial game state
   useEffect(() => {
     setGameState(data);
@@ -99,23 +99,21 @@ const GameRoom = (props) => {
     //setCurrentColor(gameState.discard.at(0));
   }, []);
 
-  useEffect(() => { //se her
+  // Denne useEffecten skal kun hente info fra gameState! Henter man info fra andre ting kan det være det ikke blir lastet
+  // Kan feks ikke sette currentColor fra currentTopCard, den må settes fra gameState.
+  useEffect(() => {
     if (gameState != null) {
       console.log(gameState);
       setYourPlayer(gameState.player1.name);
-      setYourPlayerHand(gameState.player1.hand); //gamestate.deck
+      setYourPlayerHand(gameState.player1.hand);
       setCurrentTopCard(gameState.discard[0]);
       setDiscardPile(gameState.discard);
-      console.log(currentTopCard);
-      //if(setDeck != null) {
-      //  setDeck}
+      setCurrentColor(gameState.discard[0].cardColor);
     }
   }, [gameState]);
 
   return (
-    <div
-      className={`Game backgroundColorR backgroundColor${currentTopCard.cardColor}`}
-    >
+    <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
       <DiscardPile
@@ -129,6 +127,8 @@ const GameRoom = (props) => {
         changeCards={setYourPlayerHand}
         currentTopCard={currentTopCard}
         setCurrentCard={setCurrentTopCard}
+        currentColor={currentColor}
+        setCurrentColor={setCurrentColor}
       ></PlayerHand>
     </div>
   );
