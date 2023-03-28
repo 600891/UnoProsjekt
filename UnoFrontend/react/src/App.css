@@ -162,3 +162,42 @@ label {
   font-size: 300%;
   text-shadow: 2px 2px 4px #000000;
 }
+
+
+
+
+
+
+/* gameSessionCard */
+
+.framing{
+border-radius: 20px;
+  background-color: #f2f2f2;
+  width: 200px;
+
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.9);
+
+}
+
+
+
+
+
+
+
+
+
+.row {
+  width: 100%;
+  margin: 40 auto;
+  
+
+}
+.block {
+  
+  width: auto;
+  display: inline-block;
+  margin: 20px;
+ 
+  
+}
