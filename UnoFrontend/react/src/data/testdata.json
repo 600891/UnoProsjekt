@@ -5,16 +5,24 @@
     "name": "Nora",
     "hand": [
       {
+        "cardId": "0",
         "cardColor": "red",
         "cardValue": "zero"
       },
       {
+        "cardId": "1",
         "cardColor": "blue",
         "cardValue": "skip"
       },
       {
+        "cardId": "2",
         "cardColor": "blue",
         "cardValue": "skip"
+      },
+      {
+        "cardId": "12",
+        "cardColor": "black",
+        "cardValue": "wild"
       }
     ]
   },
@@ -22,14 +30,17 @@
     "name": "Stian",
     "hand": [
       {
+        "cardId": "3",
         "cardColor": "blue",
         "cardValue": "five"
       },
       {
+        "cardId": "4",
         "cardColor": "black",
         "cardValue": "wild"
       },
       {
+        "cardId": "5",
         "cardColor": "blue",
         "cardValue": "skip"
       }
@@ -37,28 +48,34 @@
   },
   "deck": [
     {
+      "cardId": "6",
       "cardColor": "blue",
       "cardValue": "five"
     },
     {
+      "cardId": "7",
       "cardColor": "black",
       "cardValue": "wild"
     },
     {
+      "cardId": "8",
       "cardColor": "blue",
       "cardValue": "skip"
     }
   ],
   "discard": [
     {
+      "cardId": "9",
       "cardColor": "blue",
       "cardValue": "five"
     },
     {
+      "cardId": "10",
       "cardColor": "black",
       "cardValue": "wild"
     },
     {
+      "cardId": "11",
       "cardColor": "blue",
       "cardValue": "skip"
     }
