@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import _ from "lodash";
 
-const PlayerHand = ({ name, hand, changeCards, currentTopCard }) => {
+const PlayerHand = ({ name, hand, changeCards, currentTopCard, setCurrentCard }) => {
   let currentColor;
   const onCardPlayedHandler = (played_card) => {
     // Check if color is legal
@@ -21,6 +21,7 @@ const PlayerHand = ({ name, hand, changeCards, currentTopCard }) => {
           "Enter the color you want to change to (blue, red, green, yellow)"
         ).toLowerCase();
       }
+      setCurrentCard(played_card);
     }
     // Check if value is legal
     if (currentTopCard.cardValue === played_card.cardValue) {

@@ -87,6 +87,7 @@ const GameRoom = (props) => {
   const [yourPlayer, setYourPlayer] = useState("");
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
   const [currentTopCard, setCurrentTopCard] = useState("");
+  const [discardPile, setDiscardPile] = useState("");
 
   // Runs once on component mount, sets up game data from initial game state
   useEffect(() => {
@@ -97,12 +98,16 @@ const GameRoom = (props) => {
     //setCurrentColor(gameState.discard.at(0));
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { //se her
     if (gameState != null) {
       console.log(gameState);
       setYourPlayer(gameState.player1.name);
-      setYourPlayerHand(gameState.player1.hand);
-      setCurrentTopCard(gameState.discard[gameState.discard.length - 1]);
+      setYourPlayerHand(gameState.player1.hand); //gamestate.deck
+      setCurrentTopCard(gameState.discard[0]);
+      setDiscardPile(gameState.discard);
+      console.log(currentTopCard);
+      //if(setDeck != null) {
+      //  setDeck}
     }
   }, [gameState]);
 
@@ -112,12 +117,17 @@ const GameRoom = (props) => {
     >
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
-      <DiscardPile></DiscardPile>
+      <DiscardPile
+        name={discardPile}
+        changeCards={setCurrentTopCard}
+        currentTopCard={currentTopCard}
+      ></DiscardPile>
       <PlayerHand
         name={yourPlayer}
         hand={yourPlayerHand}
         changeCards={setYourPlayerHand}
         currentTopCard={currentTopCard}
+        setCurrentCard={setCurrentTopCard}
       ></PlayerHand>
     </div>
   );
