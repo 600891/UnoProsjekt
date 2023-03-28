@@ -2,14 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "lodash";
 
-
-const DiscardPile = ({currentTopCard, DiscardPile}) => {
-  const onCardPlayedHandler = (played_card) => {
-    if(currentTopCard.cardColor === played_card.cardColor || played_card.cardColor === "black"){
-      console.log("colors matched!");
-      
-    }
-  }
+const DiscardPile = ({ currentTopCard, DiscardPile }) => {
+  const onCardPlayedHandler = (played_card) => {};
 
   return (
     <div>
@@ -22,8 +16,8 @@ const DiscardPile = ({currentTopCard, DiscardPile}) => {
             src={require(`../assets/cards-front/${
               currentTopCard.cardValue + currentTopCard.cardColor
             }.png`)}
-          /> 
-        </div> 
+          />
+        </div>
       )}
     </div>
   );
