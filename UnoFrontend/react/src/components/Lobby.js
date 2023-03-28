@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import GameSessionCard from "./GameSessionCard";
 
 function Lobby() {
+  //states
+  // to display current game rooms. Must be fetched from backend
+  const [gameRooms, setGameRooms] = useState([]);
+  // sets the currnet user from backend
+  const [user, setUser] = useState({});
+
   const location = useLocation();
   console.log(location);
   const navigate = useNavigate();
@@ -21,7 +28,20 @@ function Lobby() {
       <div className="parent">
         <div className="center">
           <h1 className="white-text h1">Welcome to the lobby</h1>
-
+          <div className="row">
+            <div className="block">
+              <GameSessionCard gameRoomName="Stian sitt rom" />
+            </div>
+            <div className="block">
+              <GameSessionCard gameRoomName="Leif sitt rom" />
+            </div>
+            <div className="block">
+              <GameSessionCard gameRoomName="Gygrid sitt rom" />
+            </div>
+            <div className="block">
+              <GameSessionCard gameRoomName="Unorom" />
+            </div>
+          </div>
           <button className="button" onClick={joinGame}>
             Join UNO-Session
           </button>
