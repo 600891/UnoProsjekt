@@ -1,27 +1,23 @@
 package no.hvl.dat109.Uno.models;
 
-import no.hvl.dat109.Uno.models.ColorEnum;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class CardCollection {
 
     private List<Card> deck = new ArrayList<>();
-    private final int NUM_OF_CARDS = 112;
-    private final List<ColorEnum> COLORS = List.of(ColorEnum.BLUE, ColorEnum.GREEN, ColorEnum.RED, ColorEnum.YELLOW);
+
 
     public CardCollection() {
 
-        int id = 0;
+        /*int id = 0;
         for (int i = 0; i < NUM_OF_CARDS/COLORS.size(); i++) {
             for (ColorEnum color: COLORS) {
                 deck.add(new Card(id, color));
                 id++;
             }
-        }
+        }*/
 
     }
 
@@ -51,6 +47,14 @@ public class CardCollection {
 
     public void addCard(Card card) {
         deck.add(card);
+    }
+
+    public List<Card> takeMultiplieCards(int countCards) {
+        List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < countCards; i++) {
+            cards.add(deck.remove(0));
+        }
+        return cards;
     }
 }
 

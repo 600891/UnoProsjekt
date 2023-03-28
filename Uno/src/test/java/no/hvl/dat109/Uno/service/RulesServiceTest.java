@@ -1,13 +1,14 @@
 package no.hvl.dat109.Uno.service;
 
 import no.hvl.dat109.Uno.models.Card;
-import no.hvl.dat109.Uno.models.ColorEnum;
+import no.hvl.dat109.Uno.enums.ColorEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+//Test
 
 import java.util.stream.Stream;
 

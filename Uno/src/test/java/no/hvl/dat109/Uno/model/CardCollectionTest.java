@@ -2,13 +2,12 @@ package no.hvl.dat109.Uno.model;
 
 import no.hvl.dat109.Uno.models.Card;
 import no.hvl.dat109.Uno.models.CardCollection;
-import no.hvl.dat109.Uno.models.ColorEnum;
+import no.hvl.dat109.Uno.enums.ColorEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.Assert;
+//Test
 
-import java.awt.*;
 import java.util.List;
 
 public class CardCollectionTest {
