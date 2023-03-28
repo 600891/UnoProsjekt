@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function CreateUser() {
   const [userName, setUsername] = useState("");
   const [password, setpassword] = useState("");
   const navigate = useNavigate();
 
-  //code for logging the user in with an existing account. Must implement log in logic
+  //code for logging creating a new user and logging the user in. Must implement log in logic
   const login = () => {
     console.log(
       "Bruker trykket login med brukernavn:" +
@@ -19,16 +19,14 @@ function Login() {
       state: { userName: userName, password },
     });
   };
-  // Redirects users to the createuser page
-  const createUserNav = () => {
-    navigate("/createuser");
-  };
 
   return (
     <div className="background-image">
       <div className="parent">
         <div className="center">
-          <h1 className="white-text h1">Please sign in to play!</h1>
+          <h1 className="white-text h1">
+            Please choose a username and password
+          </h1>
           <div>
             <div className="inputfield">
               <label style={{ marginRight: 9 }} className="white-text">
@@ -55,13 +53,10 @@ function Login() {
           <button className="button" onClick={login}>
             Log in to this UNO-session
           </button>
-          <button className="button" onClick={createUserNav}>
-            Don't have an account yet??
-          </button>
         </div>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default CreateUser;
