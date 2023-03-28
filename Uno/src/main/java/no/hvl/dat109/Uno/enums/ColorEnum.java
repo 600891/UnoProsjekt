@@ -1,4 +1,6 @@
-package no.hvl.dat109.Uno.models;
+package no.hvl.dat109.Uno.enums;
+
+import java.util.List;
 
 /**
  *  Colors that can be used in a card
@@ -24,5 +26,9 @@ public enum ColorEnum {
     /**
      * Black color
      */
-    BLACK
+    BLACK;
+
+    public static List<ColorEnum> getColors() {
+        return List.of(ColorEnum.BLUE, ColorEnum.GREEN, ColorEnum.RED, ColorEnum.YELLOW, ColorEnum.BLACK);
+    }
 }
