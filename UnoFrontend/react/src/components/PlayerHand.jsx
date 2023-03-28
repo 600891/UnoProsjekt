@@ -2,12 +2,19 @@ import React from "react";
 import { useState, useEffect } from "react";
 import _ from "lodash";
 
-const PlayerHand = ({ name, hand, changeCards, currentTopCard, setCurrentCard }) => {
-  let currentColor;
+const PlayerHand = ({
+  name,
+  hand,
+  changeCards,
+  currentTopCard,
+  setCurrentCard,
+  currentColor,
+  setCurrentColor,
+}) => {
   const onCardPlayedHandler = (played_card) => {
     // Check if color is legal
     if (
-      currentTopCard.cardColor === played_card.cardColor ||
+      currentColor === played_card.cardColor ||
       played_card.cardColor === "black"
     ) {
       console.log("colors matched!");
@@ -15,6 +22,7 @@ const PlayerHand = ({ name, hand, changeCards, currentTopCard, setCurrentCard })
         (card) => !_.isEqual(card.cardId, played_card.cardId)
       );
       changeCards(newHand);
+      let currentColor = played_card.cardColor;
       if (played_card.cardColor === "black") {
         //ask for new color
         currentColor = prompt(
@@ -22,6 +30,7 @@ const PlayerHand = ({ name, hand, changeCards, currentTopCard, setCurrentCard })
         ).toLowerCase();
       }
       setCurrentCard(played_card);
+      setCurrentColor(currentColor);
     }
     // Check if value is legal
     if (currentTopCard.cardValue === played_card.cardValue) {
