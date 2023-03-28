@@ -6,7 +6,7 @@ import no.hvl.dat109.Uno.models.Player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.Assert;
+
 
 import java.util.List;
 

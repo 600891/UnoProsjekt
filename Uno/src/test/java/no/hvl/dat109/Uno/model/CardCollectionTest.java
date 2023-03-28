@@ -6,6 +6,7 @@ import no.hvl.dat109.Uno.enums.ColorEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+//Test
 
 import java.util.List;
 
