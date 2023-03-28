@@ -2,12 +2,8 @@ package no.hvl.dat109.Uno.persistence.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Player has a hand, a name and id.
- * @author Oda Bastesen Storebo
- */
 @Entity
 public class Player {
     @Id
@@ -17,11 +13,11 @@ public class Player {
     private String name;
 
     @Transient // todo: remove this when card becomes entity
-    private ArrayList<Card> hand;
+    private List<Card> hand;
 
     public Player() {/*default contructor*/}
 
-    public Player(Long id, String name, ArrayList<Card> hand){
+    public Player(Long id, String name, List<Card> hand){
         this.id = id;
         this.name = name;
         this.hand = hand;
@@ -39,8 +35,8 @@ public class Player {
 
     public void setName(String name){ this.name = name; }
 
-    public ArrayList<Card> getHand(){ return hand;}
+    public List<Card> getHand(){ return hand;}
 
-    public void setHand(ArrayList<Card> hand){ this.hand = hand; }
+    public void setHand(List<Card> hand){ this.hand = hand; }
 
 }

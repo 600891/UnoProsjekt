@@ -13,6 +13,7 @@ public class Game {
     private Player gameCreator;
 
     //@Column(name = "players")
+    //@OneToMany
     private List<Player> players;
     //@Column(name = "active_player")
     private Player activePlayer;

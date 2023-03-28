@@ -1,5 +1,8 @@
 package no.hvl.dat109.Uno.api;
 
+import no.hvl.dat109.Uno.api.dto.ErrorResponse;
+import no.hvl.dat109.Uno.api.dto.GameResponse;
+import no.hvl.dat109.Uno.api.dto.ListOfGamesResponse;
 import no.hvl.dat109.Uno.persistence.entity.Game;
 import no.hvl.dat109.Uno.service.GameService;
 import no.hvl.dat109.Uno.service.MappingService;
@@ -10,7 +13,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 public class GameLobbyController {

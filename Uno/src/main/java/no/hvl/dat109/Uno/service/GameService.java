@@ -1,7 +1,11 @@
 package no.hvl.dat109.Uno.service;
 
+import no.hvl.dat109.Uno.enums.ColorEnum;
+import no.hvl.dat109.Uno.service.model.CardCollection;
+import no.hvl.dat109.Uno.persistence.entity.Card;
 import no.hvl.dat109.Uno.persistence.entity.Game;
 import no.hvl.dat109.Uno.persistence.entity.Player;
+import no.hvl.dat109.Uno.utils.ConstantUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,6 +99,49 @@ public class GameService {
 
     public boolean isGameFull(Game game) {
         return game.getPlayers().size() >= 4;
+    }
+
+    public List<Player> createPlayers(int numOfPlayers, List<String> names) {
+        List<Player> players = new ArrayList<>();
+        for (int i = 0; i < numOfPlayers; i++) {
+            players.add(new Player((long) i, names.get(i), new ArrayList<>()));
+        }
+
+        return players;
+    }
+
+    public CardCollection makeDeck() {
+        CardCollection deck = new CardCollection();
+        int id = 0;
+        for (ColorEnum color: ColorEnum.values()) {
+            for (int i = 0; i < ConstantUtil.NUM_OF_CARDS/ConstantUtil.NUM_COLORS; i++) {
+                deck.addCard(new Card(id, color));
+                id++;
+            }
+        }
+
+        return deck;
+    }
+
+    public CardCollection makeDiscardPile(CardCollection deck) {
+        // Trenger deck får å legge til det øverste kortet i decard pile
+        CardCollection discardPile = new CardCollection();
+        discardPile.addCard(deck.takeCard());
+        return discardPile;
+    }
+
+    public void distributeCards(List<Player> players, CardCollection deck) {
+        for (Player player: players) {
+            player.setHand(deck.takeMultiplieCards(ConstantUtil.NUM_START_CARDS));
+        }
+    }
+
+    public boolean checkUno(Player player) {
+        return player.getHand().size() == ConstantUtil.NUM_FOR_UNO;
+    }
+
+    public boolean checkWin(Player player) {
+        return player.getHand().size() == ConstantUtil.NUM_FOR_WIN;
     }
 
 }

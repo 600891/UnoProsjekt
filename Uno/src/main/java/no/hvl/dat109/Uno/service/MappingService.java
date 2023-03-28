@@ -1,7 +1,7 @@
 package no.hvl.dat109.Uno.service;
 
-import no.hvl.dat109.Uno.api.GameResponse;
-import no.hvl.dat109.Uno.api.ListOfGamesResponse;
+import no.hvl.dat109.Uno.api.dto.GameResponse;
+import no.hvl.dat109.Uno.api.dto.ListOfGamesResponse;
 import no.hvl.dat109.Uno.persistence.entity.Game;
 import no.hvl.dat109.Uno.persistence.entity.Player;
 import org.springframework.stereotype.Service;
