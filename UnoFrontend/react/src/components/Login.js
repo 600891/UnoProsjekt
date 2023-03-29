@@ -5,14 +5,35 @@ function Login() {
   const [userName, setUsername] = useState("");
   const [password, setpassword] = useState("");
 
-  const [data, setData] = useState("");
+  const [data, setData] = useState({});
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const params = {
+    body: "Test",
+  };
+  const options = {
+    method: "POST",
+    body: JSON.stringify(params),
+  };
+  console.log(options);
+
+  async function testPost() {
+    fetch("http://localhost:8080/login", options)
+      .then((response) => response.text())
+      .then((response) => {
+        console.log(response);
+        // Do something with response.
+      });
+  }
+
   async function fetchData() {
-    const response = await fetch("/login");
-    const body = await response.json();
-    setData(body);
-    console.log(data);
+    fetch("http://localhost:8080/login")
+      .then((response) => response.text()) // parse response as text
+      .then((data) => {
+        console.log(data); // log the response string to the console
+      })
+      .catch((error) => console.error(error));
   }
 
   //code for logging the user in with an existing account. Must implement log in logic
@@ -69,7 +90,7 @@ function Login() {
           </button>
 
           <div>
-            <button onClick={fetchData}>TestButton</button>
+            <button onClick={testPost}>TestButton</button>
           </div>
         </div>
       </div>
