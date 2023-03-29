@@ -1,6 +1,6 @@
 package no.hvl.dat109.Uno.service;
 
-import no.hvl.dat109.Uno.models.Card;
+import no.hvl.dat109.Uno.persistence.entity.Card;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +12,7 @@ public class CardRuleService {
      * @param cardOnTable the card at the top of the card stack of played cards on the table
      * @return true if card is playable and false if card is not playable
      */
-    public static boolean isCardPlayable(Card cardToPlay, Card cardOnTable) {
+    public boolean isCardPlayable(Card cardToPlay, Card cardOnTable) {
         return cardToPlay.getColor().equals(cardOnTable.getColor());
     }
 
