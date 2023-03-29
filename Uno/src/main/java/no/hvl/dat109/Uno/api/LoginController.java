@@ -2,9 +2,7 @@ package no.hvl.dat109.Uno.api;
 
 import no.hvl.dat109.Uno.service.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
@@ -17,8 +15,12 @@ public class LoginController {
         this.persistenceService = persistenceService;
     }
 
-    @GetMapping
-    public String getRegisterView() {
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping
+    public String getRegisterView( @RequestBody() String data ) {
+
+        System.out.println(data);
+
         return "Hello World";
     }
 
