@@ -124,8 +124,8 @@ const GameRoom = (props) => {
       <PlayerHand
         name={yourPlayer}
         hand={yourPlayerHand}
-        changeCards={setYourPlayerHand}
-        currentTopCard={currentTopCard}
+        changeHand={setYourPlayerHand}
+        currentCard={currentTopCard}
         setCurrentCard={setCurrentTopCard}
         currentColor={currentColor}
         setCurrentColor={setCurrentColor}
