@@ -18,7 +18,7 @@ public class LoginController {
     }
 
     @GetMapping
-    public String getRegisterView(){
+    public String getRegisterView() {
         return "Hello World";
     }
 
