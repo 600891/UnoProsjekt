@@ -10,19 +10,21 @@ function Login() {
   const navigate = useNavigate();
 
   const params = {
-    body: "Test",
+    username: userName,
+    password: password,
   };
   const options = {
     method: "POST",
     body: JSON.stringify(params),
+    headers: { "Content-Type": "application/json" },
   };
-  console.log(options);
 
   async function testPost() {
-    fetch("http://localhost:8080/login", options)
+    await fetch("http://localhost:8080/login", options)
       .then((response) => response.text())
       .then((response) => {
         console.log(response);
+        console.log(options);
         // Do something with response.
       });
   }
