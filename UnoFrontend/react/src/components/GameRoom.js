@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PlayerHand from "./PlayerHand";
 import DiscardPile from "./DiscardPile";
+import Deck from "./Deck";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import testData from "../data/testdata.json";
@@ -89,6 +90,7 @@ const GameRoom = (props) => {
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
   const [currentTopCard, setCurrentTopCard] = useState("");
   const [discardPile, setDiscardPile] = useState("");
+  const [deck, setDeck] = useState("");
 
   // Runs once on component mount, sets up game data from initial game state
   useEffect(() => {
@@ -106,9 +108,7 @@ const GameRoom = (props) => {
       setYourPlayerHand(gameState.player1.hand); //gamestate.deck
       setCurrentTopCard(gameState.discard[0]);
       setDiscardPile(gameState.discard);
-      console.log(currentTopCard);
-      //if(setDeck != null) {
-      //  setDeck}
+      setDeck(gameState.deck);
     }
   }, [gameState]);
 
@@ -119,10 +119,17 @@ const GameRoom = (props) => {
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
       <DiscardPile
-        name={discardPile}
+        name="discardPile"
         changeCards={setCurrentTopCard}
         currentTopCard={currentTopCard}
       ></DiscardPile>
+      <Deck
+        name="deck"
+        setDeck={setDeck}
+        deck={deck}
+        setYourPlayerHand={setYourPlayerHand}
+        yourPlayerHand={yourPlayerHand}
+      ></Deck>
       <PlayerHand
         name={yourPlayer}
         hand={yourPlayerHand}
