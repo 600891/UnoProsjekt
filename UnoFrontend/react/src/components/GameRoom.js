@@ -101,11 +101,11 @@ const GameRoom = (props) => {
     //setCurrentColor(gameState.discard.at(0));
   }, []);
 
-  useEffect(() => { //se her
+  useEffect(() => { 
     if (gameState != null) {
       console.log(gameState);
       setYourPlayer(gameState.player1.name);
-      setYourPlayerHand(gameState.player1.hand); //gamestate.deck
+      setYourPlayerHand(gameState.player1.hand); 
       setCurrentTopCard(gameState.discard[0]);
       setDiscardPile(gameState.discard);
       setDeck(gameState.deck);
