@@ -10,9 +10,14 @@
         "cardValue": "zero"
       },
       {
+        "cardId": "13",
+        "cardColor": "red",
+        "cardValue": "skip"
+      },
+      {
         "cardId": "1",
         "cardColor": "blue",
-        "cardValue": "skip"
+        "cardValue": "two"
       },
       {
         "cardId": "2",
