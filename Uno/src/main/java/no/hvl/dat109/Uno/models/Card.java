@@ -1,6 +1,6 @@
 package no.hvl.dat109.Uno.models;
 
-import no.hvl.dat109.Uno.models.ColorEnum;
+import no.hvl.dat109.Uno.enums.ColorEnum;
 
 import java.util.Objects;
 public class Card {

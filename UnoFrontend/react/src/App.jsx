@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Lobby from "./components/Lobby";
 import GameRoom from "./components/GameRoom";
 import Logout from "./components/Logout";
+import CreateUser from "./components/CreateUser";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/lobby" element={<Lobby />} />
         <Route path="/gameroom" element={<GameRoom />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/createuser" element={<CreateUser />} />
       </Routes>
     </div>
   );

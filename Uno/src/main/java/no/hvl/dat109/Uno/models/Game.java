@@ -23,21 +23,40 @@ public class Game {
     private String discardPile;
     private String deck;
 
-    //private CardCollection discardPile;
-    //private CardCollection deck;
-    
+    /**
+     * Empty constructor
+     */
+    public Game() {
+
+    }
 
 
 
+    /**
+     *
+     * Gets the id of the game
+     * @return id of the game
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets the id of the game
+     * @param id
+     *
+     *
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
 
+    /**
+     *
+     * Returns players of the game
+     * @return
+     */
     public List<Player> getPlayers() {
         return players;
     }

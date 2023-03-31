@@ -1,88 +1,72 @@
 package no.hvl.dat109.Uno.models;
+import no.hvl.dat109.Uno.enums.ColorEnum;
+
+import no.hvl.dat109.Uno.utils.DatabaseService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-
 public class GameRules {
-    private static final int TOTCARDS = 112;
-    private static final int STARTCARDCOUNT = 7;
-    private static List<Color> colors = List.of(Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW);
+
+    private static List<ColorEnum> colors = ColorEnum.getColors();
+    public static final int NUM_COLORS = colors.size(); // Black is not considered a color yet
+    public static final int NUM_START_CARDS = 7; // Amont of cards starting on hand
+
+    public static final int NUM_OF_CARDS = 112; // Total number of cards in a deck
+    public static final int NUM_FOR_UNO = 1; // How many cards on hand to have uno
+    public static final int NUM_FOR_WIN = 0; //Number of cards in hand to win
+
+    @Autowired static DatabaseService databaseService;
 
 
-    
-    /** 
-     * @return List<Card>
-     * 
-     * Generates a complete, shuffled Uno-deck containing all cards.
-     */
-    public static List<Card> generateDeck() {
-        List<Card> deck = new ArrayList<>();
-        for (Color color: colors) {
-            for (int i = 0; i < TOTCARDS/colors.size(); i++) {
-                deck.add(new Card(color));
+
+    public static List<Player> createPlayers(int numOfPlayers, List<String> names) {
+        List<Player> players = new ArrayList<>();
+        for (int i = 0; i < numOfPlayers; i++) {
+            players.add(new Player((long) i, names.get(i), new ArrayList<>()));
+        }
+
+
+        return players;
+    }
+    public static CardCollection makeDeck() {
+
+        CardCollection deck = new CardCollection();
+        int id = 0;
+        for (ColorEnum color: colors) {
+            for (int i = 0; i < NUM_OF_CARDS/NUM_COLORS; i++) {
+                deck.addCard(new Card(id, color));
+                id++;
             }
         }
-        Collections.shuffle(deck);
+
         return deck;
     }
 
-
-
-    
-    /** 
-     * @return List<Card>
-     * 
-     * 
-     */
-    public static List<Card> createDiscardPile() {
-
-        return new ArrayList<>();
+    public static CardCollection makeDiscardPile(CardCollection deck) {
+        // Trenger deck får å legge til det øverste kortet i decard pile
+        CardCollection discardPile = new CardCollection();
+        discardPile.addCard(deck.takeCard());
+        return discardPile;
     }
 
-    
-    /** 
-     * @param players
-     * @param deck
-     * 
-     * Takes cards from the deck and give them to a player
-     */
-    public static void dealCards(List<Player> players, List<Card> deck) {
-        
-        players.forEach(p -> {
-            List<Card> hand = new ArrayList<Card>();
-            for (int i = 0; i < STARTCARDCOUNT; i++) {
-                hand.add(deck.remove(0));
-            }
-            System.out.println(hand);
-            p.setHand(hand);
-        });
-        
+    public static void distributeCards(List<Player> players, CardCollection deck) {
+        for (Player player: players) {
+            player.setHand(deck.takeMultiplieCards(NUM_START_CARDS));
+        }
     }
 
-    
-    /** 
-     * @param player
-     * @param deck
-     * 
-     * Draw a card from the deck and give it to the player
-     */
-    public static void drawCard(Player player, List<Card> deck) {
-
-        player.getHand().add(deck.remove(0));        
-    }
-
-    
-    /** 
-     * @param player
-     * @return List<Card>
-     * 
-     * 
-     */
-    public static List<Card> countPoints(List<Player> player) {
-        return null;
+    public static boolean checkUno(Player player) {
+        return player.getHand().size() == NUM_FOR_UNO;
 
     }
+
+    public static boolean checkWin(Player player) {
+        return player.getHand().size() == NUM_FOR_WIN;
+    }
+
+
+
 
 }

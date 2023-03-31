@@ -1,35 +1,32 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { isColorLegal, isValueLegal } from "../utils/GameRules";
 import _ from "lodash";
 
-const PlayerHand = ({ name, hand, changeCards, currentTopCard, setCurrentCard }) => {
-  let currentColor;
+const PlayerHand = ({
+  name,
+  hand,
+  changeHand,
+  currentCard,
+  setCurrentCard,
+  currentColor,
+  setCurrentColor,
+}) => {
   const onCardPlayedHandler = (played_card) => {
-    // Check if color is legal
     if (
-      currentTopCard.cardColor === played_card.cardColor ||
-      played_card.cardColor === "black"
+      isColorLegal(
+        setCurrentCard,
+        currentColor,
+        setCurrentColor,
+        played_card
+      ) ||
+      isValueLegal(setCurrentCard, currentCard, played_card, setCurrentColor)
     ) {
-      console.log("colors matched!");
       let newHand = hand.filter(
         (card) => !_.isEqual(card.cardId, played_card.cardId)
       );
-      changeCards(newHand);
-      if (played_card.cardColor === "black") {
-        //ask for new color
-        currentColor = prompt(
-          "Enter the color you want to change to (blue, red, green, yellow)"
-        ).toLowerCase();
-      }
-      setCurrentCard(played_card);
+      changeHand(newHand);
     }
-    // Check if value is legal
-    if (currentTopCard.cardValue === played_card.cardValue) {
-    }
-
-    // Remove played_card from hand
-
-    // Add played_card to discard pile
   };
 
   return (

@@ -21,8 +21,8 @@ const DiscardPile = ({currentTopCard}) => {
             src={require(`../assets/cards-front/${
               currentTopCard.cardValue + currentTopCard.cardColor
             }.png`)}
-          /> 
-        </div> 
+          />
+        </div>
       )}
     </div>
   );
