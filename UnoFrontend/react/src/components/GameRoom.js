@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PlayerHand from "./PlayerHand";
 import DiscardPile from "./DiscardPile";
 import Deck from "./Deck";
+import Opponent from "./Opponent";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import testData from "../data/testdata.json";
@@ -12,6 +13,7 @@ const ENDPOINT = "http://localhost:8080";
 const GameRoom = (props) => {
   // Get data from mock JSON for testing
   const data = testData;
+
   // **********
   // NAVIGATION
   // **********
@@ -86,11 +88,26 @@ const GameRoom = (props) => {
   // GAME
   // **********
 
+  // Aktiv spiller
   const [yourPlayer, setYourPlayer] = useState("");
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
+
+  // Motstandere, finnes kanskje en bedre måte å gjøre dette på men for nå har vi en state per motstander (9 motstandere)
+  const [opponentOne, setOpponentOne] = useState(null);
+  const [opponentTwo, setOpponentTwo] = useState(null);
+  const [opponentThree, setOpponentThree] = useState(null);
+  const [opponentFour, setOpponentFour] = useState(null);
+  const [opponentFive, setOpponentFive] = useState(null);
+  const [opponentSix, setOpponentSix] = useState(null);
+  const [opponentSeven, setOpponentSeven] = useState(null);
+  const [opponentEight, setOpponentEight] = useState(null);
+  const [opponentNine, setOpponentNine] = useState(null);
+
+  // Bordet
   const [currentTopCard, setCurrentTopCard] = useState("");
   const [discardPile, setDiscardPile] = useState("");
-  const [currentColor, setCurrentColor] = useState("");  const [deck, setDeck] = useState("");
+  const [currentColor, setCurrentColor] = useState("");
+  const [deck, setDeck] = useState("");
 
   // Runs once on component mount, sets up game data from initial game state
   useEffect(() => {
@@ -108,6 +125,17 @@ const GameRoom = (props) => {
       console.log(gameState);
       setYourPlayer(gameState.player1.name);
       setYourPlayerHand(gameState.player1.hand);
+      console.log(gameState.player2);
+      setOpponentOne(gameState.player2);
+      setOpponentTwo(gameState.player3);
+      setOpponentThree(gameState.player4);
+      setOpponentFour(gameState.player5);
+      setOpponentFive(gameState.player6);
+      setOpponentSix(gameState.player7);
+      setOpponentSeven(gameState.player8);
+      setOpponentEight(gameState.player9);
+      setOpponentNine(gameState.player10);
+
       setCurrentTopCard(gameState.discard[0]);
       setDiscardPile(gameState.discard);
       setCurrentColor(gameState.discard[0].cardColor);
@@ -119,6 +147,7 @@ const GameRoom = (props) => {
     <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
+      <Opponent opponent={opponentOne}></Opponent>
       <DiscardPile
         name="discardPile"
         changeCards={setCurrentTopCard}
