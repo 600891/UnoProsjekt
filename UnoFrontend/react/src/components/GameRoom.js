@@ -112,10 +112,6 @@ const GameRoom = (props) => {
   // Runs once on component mount, sets up game data from initial game state
   useEffect(() => {
     setGameState(data);
-
-    //setYourPlayer(gameState.player1.name);
-    //setYourPlayerHand(gameState.player1.hand);
-    //setCurrentColor(gameState.discard.at(0));
   }, []);
 
   // Denne useEffecten skal kun hente info fra gameState! Henter man info fra andre ting kan det være det ikke blir lastet
@@ -125,7 +121,6 @@ const GameRoom = (props) => {
       console.log(gameState);
       setYourPlayer(gameState.player1.name);
       setYourPlayerHand(gameState.player1.hand);
-      console.log(gameState.player2);
       setOpponentOne(gameState.player2);
       setOpponentTwo(gameState.player3);
       setOpponentThree(gameState.player4);
@@ -147,7 +142,17 @@ const GameRoom = (props) => {
     <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
-      <Opponent opponent={opponentOne}></Opponent>
+      <div className="opponents">
+        <Opponent opponent={opponentOne}></Opponent>
+        <Opponent opponent={opponentTwo}></Opponent>
+        <Opponent opponent={opponentThree}></Opponent>
+        <Opponent opponent={opponentFour}></Opponent>
+        <Opponent opponent={opponentFive}></Opponent>
+        <Opponent opponent={opponentSix}></Opponent>
+        <Opponent opponent={opponentSeven}></Opponent>
+        <Opponent opponent={opponentEight}></Opponent>
+        <Opponent opponent={opponentNine}></Opponent>
+      </div>
       <DiscardPile
         name="discardPile"
         changeCards={setCurrentTopCard}

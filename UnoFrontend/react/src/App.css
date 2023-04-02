@@ -69,10 +69,18 @@
 }
 
 /* Opponent Info */
+.opponents {
+  display: flex;
+}
+
 .opponentcontainer {
   position: relative;
   text-align: center;
   color: white;
+}
+
+.opponentcontainer p {
+  margin: 0%;
 }
 
 .opponentinfo {
@@ -81,6 +89,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: bold;
+  font-size: larger;
+  text-shadow: black 1px 0 10px;
 }
 
 /* Styles for login, create user and lobby page */
