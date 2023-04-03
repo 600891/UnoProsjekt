@@ -8,11 +8,13 @@ import java.util.List;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "player_id", nullable = false)
     private Long id;
+    @Column(name = "name")
     private String name;
 
-    @Transient // todo: remove this when card becomes entity
+    @Column(name = "hand", columnDefinition = "TEXT")
+    @OneToMany
     private List<Card> hand;
 
     public Player() {/*default contructor*/}

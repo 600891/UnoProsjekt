@@ -1,14 +1,17 @@
 package no.hvl.dat109.Uno.persistence.entity;
 
+import jakarta.persistence.*;
 import no.hvl.dat109.Uno.enums.GameStateEnum;
 
 import java.util.List;
-//@Entity
+@Entity
+@Table(name = "game", schema = "uno")
 public class Game {
 
-    //@Id
-    //@Column(name = "id")
-    private String uuid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "game_id")
+    private Long id;
 
     private Player gameCreator;
 
@@ -20,12 +23,12 @@ public class Game {
     //@Column(name = "game_state")
     private GameStateEnum gameState;
 
-    public String getUuid() {
-        return uuid;
+    public Long getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Player getGameCreator() {
