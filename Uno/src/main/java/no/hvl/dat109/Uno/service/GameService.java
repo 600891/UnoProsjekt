@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -33,7 +34,8 @@ public class GameService {
      * @return the game created, null if no game created
      */
     public Game createGame(String username) {
-        String gameId = UUID.randomUUID().toString();
+        Long gameId = new Random().nextLong();
+       // String gameId = UUID.randomUUID().toString();
 
         Player player = persistenceService.findPlayerByUsername(username);
 
@@ -45,7 +47,7 @@ public class GameService {
         players.add(player);
 
         Game game = new Game();
-        game.setUuid(gameId);
+        game.setId(gameId);
         game.setPlayers(players);
         game.setGameCreator(player);
 
@@ -62,7 +64,7 @@ public class GameService {
      * @return the game that is joined, null if the game is full or non-existing
      */
     public Game joinGame(String username, String gameId) {
-        Game game = notStartedGames.stream().filter(g -> g.getUuid().equals(gameId)).findFirst().orElse(null);
+        Game game = notStartedGames.stream().filter(g -> g.getId().equals(gameId)).findFirst().orElse(null);
         if(game == null || isGameFull(game)) {
             return null;
         }
