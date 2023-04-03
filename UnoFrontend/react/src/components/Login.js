@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [userName, setUsername] = useState("");
   const [password, setpassword] = useState("");
+  const [session, setSession] = useState("");
 
   const [data, setData] = useState({});
   const [error, setError] = useState("");
@@ -23,11 +24,17 @@ function Login() {
     await fetch("http://localhost:8080/login", options)
       .then((response) => response.text())
       .then((response) => {
-        console.log(response);
-        console.log(options);
-        // Do something with response.
+        setSession(response);
       });
   }
+
+  useEffect(() => {
+    console.log(session);
+    if (session != "")
+      navigate("/lobby", {
+        state: { userName: userName, password: password, session: session },
+      });
+  }, [session]);
 
   async function fetchData() {
     fetch("http://localhost:8080/login")
@@ -47,9 +54,7 @@ function Login() {
         password
     );
 
-    navigate("/lobby", {
-      state: { userName: userName, password },
-    });
+    testPost();
   };
   // Redirects users to the createuser page
   const createUserNav = () => {
@@ -90,10 +95,6 @@ function Login() {
           <button className="button" onClick={createUserNav}>
             Don't have an account yet??
           </button>
-
-          <div>
-            <button onClick={testPost}>TestButton</button>
-          </div>
         </div>
       </div>
     </div>
