@@ -31,6 +31,9 @@ const GameRoom = (props) => {
 
   // init socket state
   const [gameState, setGameState] = useState(null);
+
+  // message state
+  const [message, setMessage] = useState(null);
   // Create and connect to socket
 
   useEffect(() => {
@@ -89,6 +92,8 @@ const GameRoom = (props) => {
   // **********
 
   const [gameID, setGameID] = useState(null);
+  const [playDirection, setPlayDirection] = useState("");
+  const [playerTurn, setPlayerTurn] = useState("");
 
   // Aktiv spiller
   const [yourPlayer, setYourPlayer] = useState("");
@@ -120,10 +125,16 @@ const GameRoom = (props) => {
   // Kan feks ikke sette currentColor fra currentTopCard, den må settes fra gameState.
   useEffect(() => {
     if (gameState != null) {
-      //console.log(gameState);
+      setMessage(null); // Tilbakestill message hver gang man får oppdatering
+      console.log(gameState);
+
       setGameID(gameState.gameID);
-      setYourPlayer(gameState.player1.name);
+      setPlayerTurn(gameState.playerTurn);
+      setPlayDirection(gameState.playDirection);
+
+      setYourPlayer(gameState.player1);
       setYourPlayerHand(gameState.player1.hand);
+
       setOpponentOne(gameState.player2);
       setOpponentTwo(gameState.player3);
       setOpponentThree(gameState.player4);
@@ -134,12 +145,38 @@ const GameRoom = (props) => {
       setOpponentEight(gameState.player9);
       setOpponentNine(gameState.player10);
 
+      setDeck(gameState.deck);
       setCurrentTopCard(gameState.discard[0]);
       setDiscardPile(gameState.discard);
       setCurrentColor(gameState.discard[0].cardColor);
-      setDeck(gameState.deck);
     }
   }, [gameState]);
+
+  // Konstruer et nytt message-objekt ut fra klientens state etter at spilleren har gjort et trekk
+  const onTurnPlayedHandler = () => {
+    // Rekkefølge: gameID, playerTurn, playDirection, player1-10, deck, discard
+    setMessage({
+      gameID: gameID,
+      playerTurn: playerTurn,
+      playDirection: playDirection,
+      player1: yourPlayer,
+      player2: opponentOne,
+      player3: opponentTwo,
+      player4: opponentThree,
+      player5: opponentFour,
+      player6: opponentFive,
+      player7: opponentSix,
+      player8: opponentSeven,
+      player9: opponentEight,
+      player10: opponentNine,
+      deck: deck,
+      discard: discardPile,
+    });
+  };
+  useEffect(() => {
+    // Send denne meldingen til backend
+    console.log(message);
+  }, [message]);
 
   return (
     <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
@@ -176,13 +213,16 @@ const GameRoom = (props) => {
             ></Deck>
           </div>
           <PlayerHand
-            name={yourPlayer}
+            player={yourPlayer}
             hand={yourPlayerHand}
             changeHand={setYourPlayerHand}
             currentCard={currentTopCard}
             setCurrentCard={setCurrentTopCard}
             currentColor={currentColor}
             setCurrentColor={setCurrentColor}
+            direction={playDirection}
+            setDirection={setPlayDirection}
+            turnHandler={onTurnPlayedHandler}
           ></PlayerHand>
         </div>
         <div className="sideColumn opponentsRight">

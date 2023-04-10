@@ -1,6 +1,7 @@
 {
   "gameID": 1,
   "playerTurn": "player1",
+  "playDirection": "clockwise",
   "player1": {
     "name": "Nora",
     "hand": [
@@ -12,7 +13,7 @@
       {
         "cardId": "13",
         "cardColor": "red",
-        "cardValue": "skip"
+        "cardValue": "reverse"
       },
       {
         "cardId": "1",
