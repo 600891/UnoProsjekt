@@ -6,14 +6,15 @@ const Opponent = ({ opponent }) => {
     return (
       <div>
         {opponent && (
-          <div class="opponentcontainer">
-            <p>{opponent.name}</p>
-            <p class="opponentinfo">{handSize}</p>
+          <div className="opponentcontainer">
             <img
               className="Card"
               alt="Deck"
               src={require(`../assets/card-back.png`)}
             />
+            <p className="opponentinfo">
+              {opponent.name} <br /> has {handSize} cards.
+            </p>
           </div>
         )}
       </div>
@@ -21,14 +22,13 @@ const Opponent = ({ opponent }) => {
   } else {
     return (
       <div>
-        <div class="opponentcontainer">
-          <p>---</p>
-          <p class="opponentinfo">0</p>
+        <div className="opponentcontainer">
           <img
             className="Card"
             alt="Deck"
             src={require(`../assets/card-back.png`)}
           />
+          <p className="opponentinfo">No player</p>
         </div>
       </div>
     );

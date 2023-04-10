@@ -88,6 +88,8 @@ const GameRoom = (props) => {
   // GAME
   // **********
 
+  const [gameID, setGameID] = useState(null);
+
   // Aktiv spiller
   const [yourPlayer, setYourPlayer] = useState("");
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
@@ -118,7 +120,8 @@ const GameRoom = (props) => {
   // Kan feks ikke sette currentColor fra currentTopCard, den må settes fra gameState.
   useEffect(() => {
     if (gameState != null) {
-      console.log(gameState);
+      //console.log(gameState);
+      setGameID(gameState.gameID);
       setYourPlayer(gameState.player1.name);
       setYourPlayerHand(gameState.player1.hand);
       setOpponentOne(gameState.player2);
@@ -140,40 +143,54 @@ const GameRoom = (props) => {
 
   return (
     <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
-      <h1>You have entered the game room!</h1>
-      <button onClick={returnToLobby}>Go back to lobby</button>
-      <div className="opponents">
-        <Opponent opponent={opponentOne}></Opponent>
-        <Opponent opponent={opponentTwo}></Opponent>
-        <Opponent opponent={opponentThree}></Opponent>
-        <Opponent opponent={opponentFour}></Opponent>
-        <Opponent opponent={opponentFive}></Opponent>
-        <Opponent opponent={opponentSix}></Opponent>
-        <Opponent opponent={opponentSeven}></Opponent>
-        <Opponent opponent={opponentEight}></Opponent>
-        <Opponent opponent={opponentNine}></Opponent>
+      <div className="navBar">
+        <h1>You are in game {gameID}</h1>
+        <button className="button" onClick={returnToLobby}>
+          Go back to lobby
+        </button>
       </div>
-      <DiscardPile
-        name="discardPile"
-        changeCards={setCurrentTopCard}
-        currentTopCard={currentTopCard}
-      ></DiscardPile>
-      <Deck
-        name="deck"
-        setDeck={setDeck}
-        deck={deck}
-        setYourPlayerHand={setYourPlayerHand}
-        yourPlayerHand={yourPlayerHand}
-      ></Deck>
-      <PlayerHand
-        name={yourPlayer}
-        hand={yourPlayerHand}
-        changeHand={setYourPlayerHand}
-        currentCard={currentTopCard}
-        setCurrentCard={setCurrentTopCard}
-        currentColor={currentColor}
-        setCurrentColor={setCurrentColor}
-      ></PlayerHand>
+      <div className="gameTable">
+        <div className="sideColumn opponentsLeft">
+          <Opponent opponent={opponentOne}></Opponent>
+          <Opponent opponent={opponentTwo}></Opponent>
+          <Opponent opponent={opponentThree}></Opponent>
+        </div>
+        <div className="middleTable">
+          <div className="flexRow opponentsTop" style={{ width: "70%" }}>
+            <Opponent opponent={opponentFour}></Opponent>
+            <Opponent opponent={opponentFive}></Opponent>
+            <Opponent opponent={opponentSix}></Opponent>
+          </div>
+          <div className="flexRow" style={{ width: "40%" }}>
+            <DiscardPile
+              name="discardPile"
+              changeCards={setCurrentTopCard}
+              currentTopCard={currentTopCard}
+            ></DiscardPile>
+            <Deck
+              name="deck"
+              setDeck={setDeck}
+              deck={deck}
+              setYourPlayerHand={setYourPlayerHand}
+              yourPlayerHand={yourPlayerHand}
+            ></Deck>
+          </div>
+          <PlayerHand
+            name={yourPlayer}
+            hand={yourPlayerHand}
+            changeHand={setYourPlayerHand}
+            currentCard={currentTopCard}
+            setCurrentCard={setCurrentTopCard}
+            currentColor={currentColor}
+            setCurrentColor={setCurrentColor}
+          ></PlayerHand>
+        </div>
+        <div className="sideColumn opponentsRight">
+          <Opponent opponent={opponentSeven}></Opponent>
+          <Opponent opponent={opponentEight}></Opponent>
+          <Opponent opponent={opponentNine}></Opponent>
+        </div>
+      </div>
     </div>
   );
 };
