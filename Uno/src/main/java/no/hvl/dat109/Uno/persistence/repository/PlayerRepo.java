@@ -1,6 +1,6 @@
-package no.hvl.dat109.Uno.utils;
+package no.hvl.dat109.Uno.persistence.repository;
 
-import no.hvl.dat109.Uno.models.Player;
+import no.hvl.dat109.Uno.persistence.entity.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

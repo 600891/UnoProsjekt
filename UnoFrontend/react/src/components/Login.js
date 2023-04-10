@@ -1,10 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [userName, setUsername] = useState("");
   const [password, setpassword] = useState("");
+  const [session, setSession] = useState("");
+
+  const [data, setData] = useState({});
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const params = {
+    username: userName,
+    password: password,
+  };
+  const options = {
+    method: "POST",
+    body: JSON.stringify(params),
+    headers: { "Content-Type": "application/json" },
+  };
+
+  async function testPost() {
+    await fetch("http://localhost:8080/login", options)
+      .then((response) => response.text())
+      .then((response) => {
+        setSession(response);
+      });
+  }
+
+  useEffect(() => {
+    console.log(session);
+    if (session != "")
+      navigate("/lobby", {
+        state: { userName: userName, password: password, session: session },
+      });
+  }, [session]);
+
+  async function fetchData() {
+    fetch("http://localhost:8080/login")
+      .then((response) => response.text()) // parse response as text
+      .then((data) => {
+        console.log(data); // log the response string to the console
+      })
+      .catch((error) => console.error(error));
+  }
 
   //code for logging the user in with an existing account. Must implement log in logic
   const login = () => {
@@ -15,9 +54,7 @@ function Login() {
         password
     );
 
-    navigate("/lobby", {
-      state: { userName: userName, password },
-    });
+    testPost();
   };
   // Redirects users to the createuser page
   const createUserNav = () => {

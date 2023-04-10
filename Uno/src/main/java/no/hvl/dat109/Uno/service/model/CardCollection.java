@@ -1,4 +1,6 @@
-package no.hvl.dat109.Uno.models;
+package no.hvl.dat109.Uno.service.model;
+
+import no.hvl.dat109.Uno.persistence.entity.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;
