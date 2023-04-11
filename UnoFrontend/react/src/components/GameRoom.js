@@ -37,7 +37,7 @@ const GameRoom = (props) => {
   // Create and connect to socket
 
   useEffect(() => {
-    socket = new WebSocket("ws://localhost:8080/");
+    socket = new WebSocket("ws://localhost:8080/uno");
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, () => {

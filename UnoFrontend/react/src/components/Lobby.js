@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import GameSessionCard from "./GameSessionCard";
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
 
 function Lobby() {
   //states
@@ -8,6 +10,10 @@ function Lobby() {
   const [gameRooms, setGameRooms] = useState([]);
   // sets the currnet user from backend
   const [user, setUser] = useState({});
+
+  let socket = null;
+  let stompClient = null;
+  const ENDPOINT = "http://localhost:8080";
 
   const location = useLocation();
   console.log(location);
@@ -22,6 +28,25 @@ function Lobby() {
   };
   // will create a new game session
   const handleCreateSession = () => {};
+
+  // connect to websocket for lobby
+  useEffect(() => {
+    setUser({
+      username: location.state.userName,
+      password: location.state.password,
+      session: location.state.session,
+    });
+    socket = new SockJS(ENDPOINT + "/uno");
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({ username: user.username }, (frame) => {
+      console.log("Connected to the websocket server " + frame);
+
+      stompClient.subscribe(ENDPOINT + "/topic/lobby", (message) => {
+        console.log("Received message:", message);
+      });
+    });
+  }, []);
 
   return (
     <div className="background-image">
