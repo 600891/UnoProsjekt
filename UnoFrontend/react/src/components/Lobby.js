@@ -18,7 +18,11 @@ function Lobby() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // disconnect user and return to login screen
   const returnToLogin = () => {
+    stompClient.disconnect(() => {
+      console.log("User disconnected");
+    });
     navigate("/", { replace: true });
   };
 
@@ -34,13 +38,10 @@ function Lobby() {
     navigate("/gameroom", { replace: true });
   };
 
-  // connect to websocket for lobby
+  // connect to websocket for lobby and subscribe to lobby rooms
   useEffect(() => {
     stompClient.connect({ username: location.state.userName }, (frame) => {
       console.log("Connected to the websocket server " + frame);
-
-      stompClient.subscribe("/user/topic/lobby", onMessageReceived);
-
       stompClient.subscribe("/topic/lobby", onMessageReceived);
     });
   }, []);
@@ -82,13 +83,11 @@ function Lobby() {
                 <GameSessionCard
                   gameRoomName={gameRoom.gameCreator + " sitt rom"}
                   gameParticipants={gameRoom.gameParticipants.length}
+                  onClick={joinGame}
                 />
               </div>
             ))}
           </div>
-          <button className="button" onClick={joinGame}>
-            Join UNO-Session
-          </button>
           <button className="button" onClick={handleCreateSession}>
             Create new game session
           </button>
