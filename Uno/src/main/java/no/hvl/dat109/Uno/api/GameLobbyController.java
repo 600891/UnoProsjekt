@@ -45,6 +45,7 @@ public class GameLobbyController {
             return;
         }
         GameResponse response = mappingService.map(game);
+        System.out.println(response.toString());
         messagingTemplate.convertAndSend("/topic/lobby", response);
     }
 

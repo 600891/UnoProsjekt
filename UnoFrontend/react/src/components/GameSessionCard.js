@@ -1,7 +1,7 @@
 import React from "react";
 
 function GameSessionCard(props) {
-  const { gameRoomName } = props;
+  const { gameRoomName, gameParticipants } = props;
 
   return (
     <div>
@@ -11,7 +11,7 @@ function GameSessionCard(props) {
           <h2>{gameRoomName}</h2>
         </div>
         <div>
-          <p>Number of players: </p>
+          <p>Number of players: {gameParticipants}</p>
         </div>
         <button className="button">Join the game </button>
       </div>
