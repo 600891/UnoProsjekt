@@ -11,8 +11,37 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "game_id")
-    private Long id;
+    private Long gameId;
+    //@OneToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "playerId")
+    //private Player player;
 
+    @Column(name="player_one")
+    private Long playerOne;
+
+    @Column(name="player_two")
+    private Long playerTwo;
+
+    @Column(name="player_three")
+    private Long playerThree;
+
+    @Column(name="player_four")
+    private Long playerFour;
+    @Column(name="player_five")
+    private Long playerFive;
+    @Column(name="player_six")
+    private Long playerSix;
+    @Column(name = "player_seven")
+    private Long playerSeven;
+    @Column(name = "player_eight")
+    private Long playerEight;
+    @Column(name = "player_nine")
+    private Long playerNine;
+    @Column(name = "player_ten")
+    private Long playerTen;
+    @ElementCollection
+    @Column (name = "deck", columnDefinition = "TEXT")
+    private List<Card> deck;
     private Player gameCreator;
 
     //@Column(name = "players")
@@ -23,12 +52,12 @@ public class Game {
     //@Column(name = "game_state")
     private GameStateEnum gameState;
 
-    public Long getId() {
-        return id;
+    public Long getGameId() {
+        return gameId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
     }
 
     public Player getGameCreator() {
@@ -62,5 +91,10 @@ public class Game {
     public void setGameState(GameStateEnum gameState) {
         this.gameState = gameState;
     }
+
+    @OneToMany (mappedBy = "Game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Player player;
+
+
 
 }

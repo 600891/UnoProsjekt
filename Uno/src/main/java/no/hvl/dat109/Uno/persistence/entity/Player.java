@@ -9,7 +9,7 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "player_id", nullable = false)
-    private Long id;
+    private Long playerId;
     @Column(name = "name")
     private String name;
 
@@ -17,28 +17,39 @@ public class Player {
     @OneToMany
     private List<Card> hand;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gameId")
+    private Game game;
+
+
     public Player() {/*default contructor*/}
 
-    public Player(Long id, String name, List<Card> hand){
-        this.id = id;
+    public Player(Long playerId, String name, List<Card> hand){
+        this.playerId = playerId;
         this.name = name;
         this.hand = hand;
     }
 
-    public Long getId() {
-        return id;
+    public Long getPlayerId() {
+        return playerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPlayerId(Long playerId) {
+        this.playerId = playerId;
     }
 
-    public String getName(){ return name; }
+    public String getName()
+    { return name; }
 
-    public void setName(String name){ this.name = name; }
+    public void setName(String name)
+    { this.name = name; }
 
-    public List<Card> getHand(){ return hand;}
+    public List<Card> getHand()
+    { return hand;}
 
-    public void setHand(List<Card> hand){ this.hand = hand; }
+    public void setHand(List<Card> hand)
+    { this.hand = hand; }
 
+  @OneToOne(mappedBy = "Player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Game game;
 }

@@ -42,10 +42,10 @@ public class GameServiceTest {
         Assertions.assertEquals(players.get(2).getName(), names.get(2));
         Assertions.assertEquals(players.get(3).getName(), names.get(3));
 
-        Assertions.assertEquals(players.get(0).getId(), 0);
-        Assertions.assertEquals(players.get(1).getId(), 1);
-        Assertions.assertEquals(players.get(2).getId(), 2);
-        Assertions.assertEquals(players.get(3).getId(), 3);
+        Assertions.assertEquals(players.get(0).getPlayerId(), 0);
+        Assertions.assertEquals(players.get(1).getPlayerId(), 1);
+        Assertions.assertEquals(players.get(2).getPlayerId(), 2);
+        Assertions.assertEquals(players.get(3).getPlayerId(), 3);
 
         Assertions.assertEquals(players.get(3).getHand().size(), 0);
 

@@ -47,7 +47,7 @@ public class GameService {
         players.add(player);
 
         Game game = new Game();
-        game.setId(gameId);
+        game.setGameId(gameId);
         game.setPlayers(players);
         game.setGameCreator(player);
 
@@ -64,7 +64,7 @@ public class GameService {
      * @return the game that is joined, null if the game is full or non-existing
      */
     public Game joinGame(String username, String gameId) {
-        Game game = notStartedGames.stream().filter(g -> g.getId().equals(gameId)).findFirst().orElse(null);
+        Game game = notStartedGames.stream().filter(g -> g.getGameId().equals(gameId)).findFirst().orElse(null);
         if(game == null || isGameFull(game)) {
             return null;
         }
