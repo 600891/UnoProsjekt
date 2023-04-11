@@ -56,3 +56,12 @@ export function isValueLegal(
   }
   return false;
 }
+
+// Set new play direction opposite of the current direction
+export function reverseDirection(direction, setDirection) {
+  if (direction === "clockwise") {
+    setDirection("counterclockwise");
+  } else {
+    setDirection("clockwise");
+  }
+}
