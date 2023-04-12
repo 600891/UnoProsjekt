@@ -12,8 +12,8 @@ function Lobby() {
   const [user, setUser] = useState({});
 
   const ENDPOINT = "http://localhost:8080";
-  let socket = new SockJS(ENDPOINT + "/uno");
-  let stompClient = Stomp.over(socket);
+  const socket = new SockJS(ENDPOINT + "/uno");
+  const stompClient = Stomp.over(socket);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ function Lobby() {
     stompClient.disconnect(() => {
       console.log("User disconnected");
     });
+    localStorage.removeItem("userName");
     navigate("/", { replace: true });
   };
 
@@ -43,6 +44,7 @@ function Lobby() {
     stompClient.connect({ username: location.state.userName }, (frame) => {
       console.log("Connected to the websocket server " + frame);
       stompClient.subscribe("/topic/lobby", onMessageReceived);
+      stompClient.send("/api/lobby", {}, {});
     });
   }, []);
 

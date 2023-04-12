@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ socket, stompClient }) {
   const [userName, setUsername] = useState("");
   const [password, setpassword] = useState("");
   const [session, setSession] = useState("");
@@ -29,11 +29,13 @@ function Login() {
   }
 
   useEffect(() => {
-    console.log(session);
-    if (session != "")
+    if (session != "") {
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("session", session);
       navigate("/lobby", {
         state: { userName: userName, password: password, session: session },
       });
+    }
   }, [session]);
 
   async function fetchData() {

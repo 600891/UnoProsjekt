@@ -10,7 +10,7 @@ import testData from "../data/testdata.json";
 
 const ENDPOINT = "http://localhost:8080";
 
-const GameRoom = (props) => {
+const GameRoom = () => {
   // Get data from mock JSON for testing
   const data = testData;
 
@@ -26,9 +26,9 @@ const GameRoom = (props) => {
   // **********
   // WEBSOCKET
   // **********
-  let socket = null;
-  let stompClient = null;
-
+  const ENDPOINT = "http://localhost:8080";
+  const socket = new SockJS(ENDPOINT + "/uno");
+  const stompClient = Stomp.over(socket);
   // init socket state
   const [gameState, setGameState] = useState(null);
 
@@ -37,9 +37,6 @@ const GameRoom = (props) => {
   // Create and connect to socket
 
   useEffect(() => {
-    socket = new WebSocket("ws://localhost:8080/uno");
-    stompClient = Stomp.over(socket);
-
     stompClient.connect({}, () => {
       console.log("Connected to the websocket server");
 
@@ -153,30 +150,33 @@ const GameRoom = (props) => {
   }, [gameState]);
 
   // Konstruer et nytt message-objekt ut fra klientens state etter at spilleren har gjort et trekk
-  const onTurnPlayedHandler = () => {
+  const onTurnPlayedHandler = (e) => {
+    e.preventDefault();
+
     // Rekkefølge: gameID, playerTurn, playDirection, player1-10, deck, discard
-    setMessage({
-      gameID: gameID,
-      playerTurn: playerTurn,
-      playDirection: playDirection,
-      player1: yourPlayer,
-      player2: opponentOne,
-      player3: opponentTwo,
-      player4: opponentThree,
-      player5: opponentFour,
-      player6: opponentFive,
-      player7: opponentSix,
-      player8: opponentSeven,
-      player9: opponentEight,
-      player10: opponentNine,
-      deck: deck,
-      discard: discardPile,
-    });
+    // Checks if the message is empty and if the user is currently logged in
+    if (message.trim() && localStorage.getItem("userName")) {
+      stompClient.send("message", {
+        gameID: gameID,
+        playerTurn: playerTurn,
+        playDirection: playDirection,
+        player1: yourPlayer,
+        player2: opponentOne,
+        player3: opponentTwo,
+        player4: opponentThree,
+        player5: opponentFour,
+        player6: opponentFive,
+        player7: opponentSix,
+        player8: opponentSeven,
+        player9: opponentEight,
+        player10: opponentNine,
+        deck: deck,
+        discard: discardPile,
+      });
+    }
+
+    setMessage("");
   };
-  useEffect(() => {
-    // Send denne meldingen til backend
-    console.log(message);
-  }, [message]);
 
   return (
     <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
