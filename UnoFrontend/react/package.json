@@ -11,6 +11,7 @@
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
     "react-stomp": "^5.1.0",
+    "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -25,6 +26,10 @@
       "react-app/jest"
     ]
   },
+
+  
+"proxy": "http://localhost:8080",
+
   "browserslist": {
     "production": [
       ">0.2%",

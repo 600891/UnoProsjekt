@@ -1,24 +1,23 @@
 package no.hvl.dat109.Uno.service;
 
-import no.hvl.dat109.Uno.models.Card;
 import no.hvl.dat109.Uno.enums.ColorEnum;
+import no.hvl.dat109.Uno.persistence.entity.Card;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-//Test
 
 import java.util.stream.Stream;
 
 @SpringBootTest
-public class RulesServiceTest {
+public class CardRulesServiceTest {
 
     private final CardRuleService ruleService;
 
     @Autowired
-     public RulesServiceTest(CardRuleService ruleService){
+     public CardRulesServiceTest(CardRuleService ruleService){
          this.ruleService = ruleService;
      }
 
@@ -34,7 +33,7 @@ public class RulesServiceTest {
     @ParameterizedTest
     @MethodSource("playableCardPairs")
     void playableCardColorTest(Card card, Card otherCard){
-        Assertions.assertTrue(CardRuleService.isCardPlayable(card, otherCard));
+        Assertions.assertTrue(ruleService.isCardPlayable(card, otherCard));
     }
 
     private static Stream<Arguments> unplayableCardCombinations() {
@@ -49,9 +48,9 @@ public class RulesServiceTest {
     @ParameterizedTest
     @MethodSource("unplayableCardCombinations")
     void unplayableCardColorTest(Card cardOne, Card cardTwo, Card cardThree, Card cardOnTable) {
-        Assertions.assertFalse(CardRuleService.isCardPlayable(cardOne, cardOnTable));
-        Assertions.assertFalse(CardRuleService.isCardPlayable(cardTwo, cardOnTable));
-        Assertions.assertFalse(CardRuleService.isCardPlayable(cardThree, cardOnTable));
+        Assertions.assertFalse(ruleService.isCardPlayable(cardOne, cardOnTable));
+        Assertions.assertFalse(ruleService.isCardPlayable(cardTwo, cardOnTable));
+        Assertions.assertFalse(ruleService.isCardPlayable(cardThree, cardOnTable));
     }
 
 }

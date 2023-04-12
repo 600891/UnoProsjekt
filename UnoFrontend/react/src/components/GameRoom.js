@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PlayerHand from "./PlayerHand";
+import DiscardPile from "./DiscardPile";
+import Deck from "./Deck";
 import SockJS from "sockjs-client";
-import Stomp from "react-stomp";
+import Stomp from "stompjs";
 import testData from "../data/testdata.json";
 
 const ENDPOINT = "http://localhost:8080";
@@ -28,17 +31,18 @@ const GameRoom = (props) => {
   const [gameState, setGameState] = useState(null);
   // Create and connect to socket
 
-  /*const connect = () => {
-    const connectionOptions = {
-      timeout: 10000,
-      transports: ["websocket"],
-    };
-    socket = new SockJS(ENDPOINT, connectionOptions);
+  useEffect(() => {
+    socket = new WebSocket("ws://localhost:8080/");
     stompClient = Stomp.over(socket);
-    setGameState(data);
-    console.log(gameState);
-    stompClient.connect({}, onConnected(), onError());
-  };*/
+
+    stompClient.connect({}, () => {
+      console.log("Connected to the websocket server");
+
+      stompClient.subscribe("/gameroom/1", (message) => {
+        console.log("Received message:", message);
+      });
+    });
+  }, []);
 
   const onConnected = () => {
     console.log("onConnected");
@@ -84,10 +88,9 @@ const GameRoom = (props) => {
 
   const [yourPlayer, setYourPlayer] = useState("");
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
-  const [currentColor, setCurrentColor] = useState("");
-
-
-  const onCardPlayedHandler = (played_card) => {};
+  const [currentTopCard, setCurrentTopCard] = useState("");
+  const [discardPile, setDiscardPile] = useState("");
+  const [currentColor, setCurrentColor] = useState("");  const [deck, setDeck] = useState("");
 
   // Runs once on component mount, sets up game data from initial game state
   useEffect(() => {
@@ -98,12 +101,17 @@ const GameRoom = (props) => {
     //setCurrentColor(gameState.discard.at(0));
   }, []);
 
+  // Denne useEffecten skal kun hente info fra gameState! Henter man info fra andre ting kan det være det ikke blir lastet
+  // Kan feks ikke sette currentColor fra currentTopCard, den må settes fra gameState.
   useEffect(() => {
     if (gameState != null) {
       console.log(gameState);
       setYourPlayer(gameState.player1.name);
       setYourPlayerHand(gameState.player1.hand);
-      setCurrentColor(gameState.discard.at(0).cardColor);
+      setCurrentTopCard(gameState.discard[0]);
+      setDiscardPile(gameState.discard);
+      setCurrentColor(gameState.discard[0].cardColor);
+      setDeck(gameState.deck);
     }
   }, [gameState]);
 
@@ -111,23 +119,27 @@ const GameRoom = (props) => {
     <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
       <h1>You have entered the game room!</h1>
       <button onClick={returnToLobby}>Go back to lobby</button>
-      <div>
-        {yourPlayerHand && (
-          <div className="yourPlayer">
-            <p className="playerDeckText">{yourPlayer}</p>
-            {yourPlayerHand.map((item, i) => (
-              <img
-                key={i}
-                className="Card"
-                onClick={() => onCardPlayedHandler(item)}
-                src={require(`../assets/cards-front/${
-                  item.cardValue + item.cardColor
-                }.png`)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      <DiscardPile
+        name="discardPile"
+        changeCards={setCurrentTopCard}
+        currentTopCard={currentTopCard}
+      ></DiscardPile>
+      <Deck
+        name="deck"
+        setDeck={setDeck}
+        deck={deck}
+        setYourPlayerHand={setYourPlayerHand}
+        yourPlayerHand={yourPlayerHand}
+      ></Deck>
+      <PlayerHand
+        name={yourPlayer}
+        hand={yourPlayerHand}
+        changeHand={setYourPlayerHand}
+        currentCard={currentTopCard}
+        setCurrentCard={setCurrentTopCard}
+        currentColor={currentColor}
+        setCurrentColor={setCurrentColor}
+      ></PlayerHand>
     </div>
   );
 };

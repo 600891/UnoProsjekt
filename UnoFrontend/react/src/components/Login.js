@@ -4,7 +4,39 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [userName, setUsername] = useState("");
   const [password, setpassword] = useState("");
+
+  const [data, setData] = useState({});
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const params = {
+    username: userName,
+    password: password,
+  };
+  const options = {
+    method: "POST",
+    body: JSON.stringify(params),
+    headers: { "Content-Type": "application/json" },
+  };
+
+  async function testPost() {
+    await fetch("http://localhost:8080/login", options)
+      .then((response) => response.text())
+      .then((response) => {
+        console.log(response);
+        console.log(options);
+        // Do something with response.
+      });
+  }
+
+  async function fetchData() {
+    fetch("http://localhost:8080/login")
+      .then((response) => response.text()) // parse response as text
+      .then((data) => {
+        console.log(data); // log the response string to the console
+      })
+      .catch((error) => console.error(error));
+  }
 
   //code for logging the user in with an existing account. Must implement log in logic
   const login = () => {
@@ -58,6 +90,10 @@ function Login() {
           <button className="button" onClick={createUserNav}>
             Don't have an account yet??
           </button>
+
+          <div>
+            <button onClick={testPost}>TestButton</button>
+          </div>
         </div>
       </div>
     </div>
