@@ -11,7 +11,7 @@ function GameSessionCard(props) {
           <h2>{gameRoomName}</h2>
         </div>
         <div>
-          <p>Number of players: {gameParticipants}</p>
+          {gameParticipants && <p>Number of players: {gameParticipants}</p>}
         </div>
         <button className="button">Join the game </button>
       </div>
