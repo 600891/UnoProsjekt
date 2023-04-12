@@ -1,8 +1,8 @@
-package no.hvl.dat109.Uno.controllers;
+package no.hvl.dat109.Uno.controller;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
-import no.hvl.dat109.Uno.utils.DatabaseService;
+import no.hvl.dat109.Uno.persistence.entity.Player;
+import no.hvl.dat109.Uno.service.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class LoginController {
     @Value("${}") private String LOGIN_URL;
 
     @Autowired
-    DatabaseService db;
+    PersistenceService db;
 
     @GetMapping
     public boolean getRegisterView(){
@@ -30,13 +30,17 @@ public class LoginController {
         if(username.equals("") || pword.equals("")) {
             ra.addFlashAttriburte("redirectMessage", INVALID_USERNAME_MESSAGE);
         }
+
+        Player user = db.findPlayerByUsername(username);
+
+        if(user == null) {
+            ra.addFlashAttribute("redirectMessage", INVALID_USERNAME_MESSAGE);
+            return "redirect:" + LOGIN_URL;
+        }
+
+
         return "redirect:" + LOGIN_URL;
     }
 
-    DatabaseService user = db.findUser(name);
 
-    if(user == null) {
-        ra.addFlashAttribuite("redirectMessage", INVALID_USERNAME_MESSAGE);
-        return "redirect:" + LOGIN_URL;
-    }
 }

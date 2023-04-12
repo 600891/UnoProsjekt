@@ -1,11 +1,16 @@
-package no.hvl.dat109.Uno.controllers;
+package no.hvl.dat109.Uno.api;
 
 import jakarta.servlet.http.HttpServletRequest;
-import no.hvl.dat109.Uno.utils.DatabaseService;
+import no.hvl.dat109.Uno.service.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+/**
+ * Service class.
+ * @author Oda Bastesen Storebo
+ */
 
 @RestController
 @RequestMapping("/registration")
@@ -16,7 +21,7 @@ public class RegistrationController {
     @Value("${app.message.invalidRegistration}") private String INVALID_REGISTRATION_MESSAGE;
 
     @Autowired
-    DatabaseService db;
+    PersistenceService db;
 
     @GetMapping
     public String getRegistrationView(){
@@ -28,24 +33,25 @@ public class RegistrationController {
                                @RequestParam("name") String name,
                                @RequestParam("pword") String pword,
                                HttpServletRequest request,
-                               RedirectAttributes ra){
+                               RedirectAttributes ra) {
         //checks if user is already in database
-        if(db.findUser(user) != null){
+        if (db.findPlayerByUsername(user) != null) {
             ra.addFlashAttribute("redirectMessage", USERNAME_ALREADY_USED_MESSAGE);
-            return "redirect:" + REGISTRATION_URL;
-        }
-
-        //checks if required information exists
-        if(user == null || name == null || pword == null){
-            ra.addFlashAttribute("redirecetMessage", INVALID_REGISTRATION_MESSAGE);
-            return "redirect:" + REGISTRATION_URL;
-        }
+            return "redirect:" + REGISTRATION_URL;}
 
 
-        //sjekk om noe e null, viss, registrer på nytt
-        //sjekk om det har verdi, viss ja bra
-        //sjekk om passord er likt
+            //checks if required information exists
+            if (user == null || name == null || pword == null) {
+                ra.addFlashAttribute("redirecetMessage", INVALID_REGISTRATION_MESSAGE);
+                return "redirect:" + REGISTRATION_URL;
+            }
 
+
+            //sjekk om noe e null, viss, registrer på nytt
+            //sjekk om det har verdi, viss ja bra
+            //sjekk om passord er likt
+
+
+        return "";
     }
-
 }
