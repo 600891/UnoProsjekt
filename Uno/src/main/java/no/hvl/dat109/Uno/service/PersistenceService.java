@@ -27,4 +27,8 @@ public class PersistenceService {
         // TODO lagre spill i basen
     }
 
+    public void deleteGame(Game game) {
+        // TODO slette spill fra basen
+    }
+
 }

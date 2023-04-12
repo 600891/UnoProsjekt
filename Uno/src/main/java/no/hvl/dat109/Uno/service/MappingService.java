@@ -22,4 +22,5 @@ public class MappingService {
         List<String> playerNames = game.getPlayers().stream().map(Player::getName).toList();
         return new GameResponse(game.getUuid(), game.getGameCreator().getName(), playerNames);
     }
+
 }

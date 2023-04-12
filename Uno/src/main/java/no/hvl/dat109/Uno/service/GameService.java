@@ -1,6 +1,7 @@
 package no.hvl.dat109.Uno.service;
 
 import no.hvl.dat109.Uno.enums.ColorEnum;
+import no.hvl.dat109.Uno.enums.GameStateEnum;
 import no.hvl.dat109.Uno.service.model.CardCollection;
 import no.hvl.dat109.Uno.persistence.entity.Card;
 import no.hvl.dat109.Uno.persistence.entity.Game;
@@ -11,13 +12,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import static no.hvl.dat109.Uno.enums.GameStateEnum.NOT_STARTED;
 
 @Service
 public class GameService {
 
-    private List<Game> notStartedGames;
-    private List<Game> startedGames;
+    private final List<Game> notStartedGames;
+    private final List<Game> startedGames;
     private final PersistenceService persistenceService;
 
     @Autowired
@@ -48,6 +52,7 @@ public class GameService {
         game.setUuid(gameId);
         game.setPlayers(players);
         game.setGameCreator(player);
+        game.setGameState(NOT_STARTED);
 
         notStartedGames.add(game);
         persistenceService.saveGame(game);
@@ -62,8 +67,8 @@ public class GameService {
      * @return the game that is joined, null if the game is full or non-existing
      */
     public Game joinGame(String username, String gameId) {
-        Game game = notStartedGames.stream().filter(g -> g.getUuid().equals(gameId)).findFirst().orElse(null);
-        if(game == null || isGameFull(game)) {
+        Game game = findNotStartedGameById(gameId);
+        if(game == null || isGameFull(game) || isPartOfGame(username) || game.getGameState() != NOT_STARTED) {
             return null;
         }
 
@@ -75,22 +80,84 @@ public class GameService {
         return game;
     }
 
-    private boolean isPartOfGame(String username) {
-        for(Game game : notStartedGames) {
+    /**
+     * this function helps the given player to leave the game he is in, either started or not
+     * @param username the username of the player that is about to leave
+     * @return the game that the player has left successfully, null otherwise
+     */
+    public Game leaveNotStartedGame(String username) {
+        Game game = findGame(username);
+        if(game == null || game.getGameState() != NOT_STARTED) {
+            return null;
+        }
+
+        game.getPlayers().removeIf(p -> p.getName().equals(username));
+        if(game.getPlayers().isEmpty()) {
+            notStartedGames.remove(game);
+        }
+
+        // todo: persistence
+
+        return game;
+    }
+
+    /**
+     * this function starts the game which the player has joined
+     * @param username the player that wants to start the game
+     * @return the game started, null if: non-existing, already started, finished, not enough players
+     */
+    public Game startGame(String username) {
+        Game game = findGame(username);
+        if(game == null || game.getGameState() != NOT_STARTED || game.getPlayers().size() < 2) {
+            return null;
+        }
+
+        notStartedGames.remove(game);
+        startedGames.add(game);
+        game.setGameState(GameStateEnum.STARTED);
+
+        // TODO persist
+
+        return game;
+    }
+
+    /**
+     * this function helps to find the actual game that the given player has joined
+     * @param username the players username to search for
+     * @return the game joined, null if the player has not joined any game
+     */
+    public Game findGame(String username) {
+        Game game = isPartOfGame(notStartedGames, username);
+        return (game != null) ? game : isPartOfGame(startedGames, username);
+    }
+
+    /**
+     * this function finds the not started game with the given gameId
+     * @param gameId the id of the game one wants to find
+     * @return the game found
+     */
+    public Game findNotStartedGameById(String gameId) {
+        return notStartedGames.stream().filter(g -> g.getUuid().equals(gameId)).findFirst().orElse(null);
+    }
+
+    /**
+     * this function determines if the given player is part of a game, either started or not
+     * @param username the players username to search for
+     * @return true if the player is part of a game
+     */
+    public boolean isPartOfGame(String username) {
+       return isPartOfGame(notStartedGames, username) != null || isPartOfGame(startedGames, username) != null;
+    }
+
+    private Game isPartOfGame(List<Game> games, String username) {
+        for(Game game : games) {
             for(Player player : game.getPlayers()) {
                 if(player.getName().equals(username)) {
-                    return true;
+                    return game;
                 }
             }
         }
-        for(Game game : startedGames) {
-            for(Player player : game.getPlayers()) {
-                if(player.getName().equals(username)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return null;
     }
 
     public List<Game> getAllNotStartedGames() {
@@ -98,8 +165,10 @@ public class GameService {
     }
 
     public boolean isGameFull(Game game) {
-        return game.getPlayers().size() >= 4;
+        return game.getPlayers().size() >= 10;
     }
+
+    // region {other code}
 
     public List<Player> createPlayers(int numOfPlayers, List<String> names) {
         List<Player> players = new ArrayList<>();
@@ -143,5 +212,7 @@ public class GameService {
     public boolean checkWin(Player player) {
         return player.getHand().size() == ConstantUtil.NUM_FOR_WIN;
     }
+
+    //endregion
 
 }
