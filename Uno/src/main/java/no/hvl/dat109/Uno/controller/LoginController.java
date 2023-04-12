@@ -28,7 +28,7 @@ public class LoginController {
     public String logIn(@RequestParam String username, @RequestParam String pword, HttpServletRequest request, RedirectAttributes ra) {
 
         if(username.equals("") || pword.equals("")) {
-            ra.addFlashAttriburte("redirectMessage", INVALID_USERNAME_MESSAGE);
+            ra.addFlashAttribute("redirectMessage", INVALID_USERNAME_MESSAGE);
         }
 
         Player user = db.findPlayerByUsername(username);
