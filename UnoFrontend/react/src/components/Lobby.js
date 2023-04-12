@@ -43,6 +43,7 @@ function Lobby() {
   useEffect(() => {
     stompClient.connect({ username: location.state.userName }, (frame) => {
       console.log("Connected to the websocket server " + frame);
+      stompClient.subscribe("/user/topic/lobby", onMessageReceived);
       stompClient.subscribe("/topic/lobby", onMessageReceived);
       stompClient.send("/api/lobby", {}, {});
     });
