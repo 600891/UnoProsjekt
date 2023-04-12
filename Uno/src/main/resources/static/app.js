@@ -22,7 +22,8 @@ function connect() {
             showGreeting(greeting.body);
         });
         stompClient.subscribe('/topic/lobby', function (response) {
-//            var parsedResponse = JSON.parse(response.body);
+           //var parsedResponse = JSON.parse(response.body);
+           //console.log(response.body);
             showGreeting(response.body);
         });
     });
@@ -37,15 +38,15 @@ function disconnect() {
 }
 
 function sendInput() {
-    stompClient.send("/app/join", {}, JSON.stringify({'input': $("#input").val()}));
+    stompClient.send("/api/join", {}, JSON.stringify({'input': $("#input").val()}));
 }
 
 function createGame() {
-    stompClient.send("/app/lobby/game/create", {}, {});
+    stompClient.send("/api/lobby/game/create", {}, {});
 }
 
 function lobby() {
-    stompClient.send("/app/lobby", {}, {});
+    stompClient.send("/api/lobby", {}, {});
 }
 
 function showGreeting(message) {

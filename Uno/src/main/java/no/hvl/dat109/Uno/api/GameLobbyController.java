@@ -32,7 +32,7 @@ public class GameLobbyController {
     public void lobby(SimpMessageHeaderAccessor accessor) {
         Principal user = getUserPrincipal(accessor);
         ListOfGamesResponse response = mappingService.map(gameService.getAllNotStartedGames());
-        messagingTemplate.convertAndSendToUser(user.getName(), "/topic/lobby", response);
+        messagingTemplate.convertAndSendToUser(user.getName(), "user/topic/lobby", response);
     }
 
     @MessageMapping("/lobby/game/create")
