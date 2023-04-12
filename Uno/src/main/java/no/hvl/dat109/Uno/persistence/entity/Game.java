@@ -8,6 +8,8 @@ import java.util.List;
 @Table(name = "game", schema = "uno")
 public class Game {
 
+    private Player gameCreator;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "game_id")
@@ -39,17 +41,39 @@ public class Game {
     private Long playerNine;
     @Column(name = "player_ten")
     private Long playerTen;
-    @ElementCollection
-    @Column (name = "deck", columnDefinition = "TEXT")
-    private List<Card> deck;
-    private Player gameCreator;
 
-    //@Column(name = "players")
-    //@OneToMany
+    @ElementCollection
+    @Column (name = "deck", columnDefinition = "TEXT", nullable = false)
+    private List<Card> deck;
+
+
+
+
+
+
+
+
+    @OneToOne
+    @JoinColumn(name = "player", nullable = false)
+    public Player getGameCreator() {
+        return gameCreator;
+    }
+
+    public void setAddress(Player player) {
+        this.player = player;
+    }
+
+
+
+
+
+
+    @OneToMany
+    @Column(name = "players")
     private List<Player> players;
-    //@Column(name = "active_player")
+    @Column(name = "active_player")
     private Player activePlayer;
-    //@Column(name = "game_state")
+    @Column(name = "game_state")
     private GameStateEnum gameState;
 
     public Long getGameId() {
@@ -60,9 +84,9 @@ public class Game {
         this.gameId = gameId;
     }
 
-    public Player getGameCreator() {
+    /*public Player getGameCreator() {
         return gameCreator;
-    }
+    }*/
 
     public void setGameCreator(Player gameCreator) {
         this.gameCreator = gameCreator;
@@ -92,7 +116,7 @@ public class Game {
         this.gameState = gameState;
     }
 
-    @OneToMany (mappedBy = "Game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne (mappedBy = "Game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Player player;
 
 

@@ -19,7 +19,7 @@ public class Player {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gameId")
-    private Game game;
+    private Game gameFK;
 
 
     public Player() {/*default contructor*/}
