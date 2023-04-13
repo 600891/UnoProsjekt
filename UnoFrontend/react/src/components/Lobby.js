@@ -42,6 +42,10 @@ function Lobby() {
     stompClientRef.current = stompClient;
   }, []);
 
+  //**********
+  // MESSAGE HANDLING
+  //**********
+
   // called when the client receives a STOMP message from the server
   // checks the message type and does the appropriate action
   const onMessageReceived = (message) => {
@@ -65,14 +69,13 @@ function Lobby() {
             // set that the user created a game if the current user was the one who created the game
             setIsGameCreator(true);
             setActiveRoom(messageObj.gameId);
-            console.log("Active room: " + activeRoom);
           }
           // send a request for all game rooms when a new game is created
           stompClientRef.current.send("/api/lobby", {}, {});
           break;
         // event-property - event er JOIN_GAME_EVENT
         case "JOIN_GAME_EVENT":
-          if (messageObj.username === user.username) {
+          if (messageObj.username === location.state.username) {
             // set the users currently active room if you were the user joining the game
             setActiveRoom(messageObj.gameId);
           }
@@ -82,6 +85,11 @@ function Lobby() {
           break;
         // event-property - event er LEAVE_GAME_EVENT
         case "LEAVE_GAME_EVENT":
+          console.log(messageObj.username);
+          if (messageObj.username === location.state.username) {
+            setActiveRoom(null);
+          }
+          stompClientRef.current.send("/api/lobby", {}, {});
           break;
         // event-property - event er START_GAME_EVENT
         case "START_GAME_EVENT":
@@ -110,9 +118,7 @@ function Lobby() {
 
   // join an already created game
   const handleJoinGame = (gameRoom) => {
-    console.log(gameRoom);
     const gameID = gameRoom.gameId;
-    console.log(gameID);
     // Send message to join game
     if (stompClientRef !== null) {
       stompClientRef.current.send(`/api/lobby/game/join/${gameID}`, {}, {});
@@ -122,8 +128,8 @@ function Lobby() {
 
   const handleLeaveGame = (gameRoom) => {
     // Send message to leave currently joined game
-    if (stompClientRef !== null && activeRoom !== null) {
-      stompClientRef.current.send("/api/lobby/game/leave/", {}, {});
+    if (stompClientRef !== null && activeRoom) {
+      stompClientRef.current.send("/api/lobby/game/leave", {}, {});
     } else {
       console.log("You are not in a room");
     }
@@ -147,6 +153,24 @@ function Lobby() {
 
   function showGameRooms(message) {
     setGameRooms(message);
+  }
+
+  //**********
+  // HELPER FUNCTIONS
+  //**********
+
+  function getRoomById(id) {
+    gameRooms.forEach((gameRoom) => {
+      if (gameRoom.gameId === id) {
+        return gameRoom;
+      }
+    });
+    return null;
+  }
+
+  function isRoomReady() {
+    console.log(getRoomById(activeRoom).gameParticipants.length > 2);
+    return getRoomById(activeRoom).gameParticipants.length > 2;
   }
 
   return (
@@ -179,6 +203,7 @@ function Lobby() {
           {isGameCreator ? (
             <button
               className="button"
+              disabled={!isRoomReady}
               onClick={() => handleStartGame(activeRoom)}
             >
               Start game

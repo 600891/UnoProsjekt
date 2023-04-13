@@ -2,7 +2,7 @@ import React from "react";
 
 function GameSessionCard(props) {
   const { gameRoom, onClick, activeRoom } = props;
-  console.log(gameRoom.gameId + " " + activeRoom);
+  //console.log(gameRoom.gameId + " " + activeRoom);
   return (
     <div>
       <div className="framing">
