@@ -9,25 +9,31 @@ const Lobby = () => {
   // to display current game rooms. Must be fetched from backend
   const [gameRooms, setGameRooms] = useState([]);
   // sets the currnet user from backend
-  const user = useRef({});
-  const activeRoom = useRef(null);
-  const isGameCreator = useRef(false);
+  const [activeRoom, setActiveRoom] = useState(() => {
+    // getting stored value
+    const saved = localStorage.getItem("activeRoom");
+    const initialValue = saved;
+    return initialValue || null;
+  });
+  const [isGameCreator, setIsGameCreator] = useState(() => {
+    // getting stored value
+    const saved = localStorage.getItem("isGameCreator");
+    const initialValue = JSON.parse(saved);
+    return initialValue || false;
+  });
 
   //**********
   // WEBSOCKETS
   //**********
   const ENDPOINT = "http://localhost:8080";
-  const stompClientRef = useRef(null);
+  const stompClientRef = useRef(() => {
+    const saved = localStorage.getItem("stompClient");
+    const initialValue = JSON.parse(saved);
+    return initialValue || null;
+  });
 
   // must fetch data to be displayed in the lobby and make sure the user is logged in
-  const fetchData = () => {
-    const setUser = {
-      username: location.state.username,
-      password: location.state.password,
-      session: location.state.session,
-    };
-    user.current = setUser;
-  };
+  const fetchData = () => {};
 
   // connect to websocket for lobby and subscribe to lobby rooms, then get list of lobbies
   useEffect(() => {
@@ -46,6 +52,18 @@ const Lobby = () => {
     });
     stompClientRef.current = stompClient;
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("activeRoom", activeRoom);
+  }, [activeRoom]);
+
+  useEffect(() => {
+    localStorage.setItem("isGameCreator", isGameCreator);
+  }, [isGameCreator]);
+
+  useEffect(() => {
+    localStorage.setItem("stompClient", stompClientRef.current);
+  }, [stompClientRef.current]);
 
   //**********
   // MESSAGE HANDLING
@@ -74,18 +92,18 @@ const Lobby = () => {
         case "CREATE_GAME_EVENT":
           if (messageObj.username === location.state.username) {
             // set that the user created a game if the current user was the one who created the game
-            isGameCreator.current = true;
-            activeRoom.current = messageObj.gameId;
-            console.log(activeRoom.current);
+            setIsGameCreator(true);
+            setActiveRoom(messageObj.gameId);
           }
           // send a request for all game rooms when a new game is created
+
           stompClientRef.current.send("/api/lobby", {}, {});
           break;
         // event-property - event er JOIN_GAME_EVENT
         case "JOIN_GAME_EVENT":
           if (messageObj.username === location.state.username) {
             // set the users currently active room if you were the user joining the game
-            activeRoom.current = messageObj.gameId;
+            setActiveRoom(messageObj.gameId);
           }
 
           // then re-fetch the games list
@@ -94,7 +112,8 @@ const Lobby = () => {
         // event-property - event er LEAVE_GAME_EVENT
         case "LEAVE_GAME_EVENT":
           if (messageObj.username === location.state.username) {
-            activeRoom.current = null;
+            setIsGameCreator(false);
+            setActiveRoom(null);
           }
           stompClientRef.current.send("/api/lobby", {}, {});
           break;
@@ -136,8 +155,8 @@ const Lobby = () => {
 
   const handleLeaveGame = (gameRoom) => {
     // Send message to leave currently joined game
-    if (stompClientRef !== null && activeRoom) {
-      console.log(activeRoom.current);
+    if (stompClientRef !== null && activeRoom !== null) {
+      console.log(activeRoom);
       stompClientRef.current.send("/api/lobby/game/leave", {}, {});
     } else {
       console.log("You are not in a room");
@@ -179,15 +198,14 @@ const Lobby = () => {
   }
 
   function isRoomReady() {
-    console.log(getRoomById(activeRoom.current).gameParticipants.length > 2);
-    return getRoomById(activeRoom.current).gameParticipants.length > 2;
+    console.log(getRoomById(activeRoom).gameParticipants.length > 2);
+    return getRoomById(activeRoom).gameParticipants.length > 2;
   }
 
   function sendUsersToGame(gameId) {
     console.log("Hello from sendUsersToGame");
-    console.log(activeRoom.current);
     console.log(gameId);
-    if (activeRoom.current === gameId) {
+    if (localStorage.getItem("activeRoom") === gameId) {
       // if you are in the started game, go to game room
       navigate("/gameroom", { replace: true });
     }
@@ -202,28 +220,28 @@ const Lobby = () => {
             {gameRooms &&
               gameRooms.map((gameRoom, i) => (
                 <div className="block" key={i}>
-                  {activeRoom.current ? (
+                  {activeRoom === gameRoom.gameId ? (
                     <GameSessionCard
                       key={i}
                       gameRoom={gameRoom}
                       onClick={() => handleLeaveGame(gameRoom)}
-                      activeRoom={activeRoom.current}
+                      activeRoom={activeRoom}
                     />
                   ) : (
                     <GameSessionCard
                       key={i}
                       gameRoom={gameRoom}
                       onClick={() => handleJoinGame(gameRoom)}
-                      activeRoom={activeRoom.current}
+                      activeRoom={activeRoom}
                     />
                   )}
                 </div>
               ))}
           </div>
-          {isGameCreator.current ? (
+          {isGameCreator ? (
             <button
               className="button"
-              onClick={() => handleStartGame(activeRoom.current)}
+              onClick={() => handleStartGame(localStorage.getItem(activeRoom))}
             >
               Start game
             </button>
