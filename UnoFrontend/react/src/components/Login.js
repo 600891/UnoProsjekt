@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login({ socket, stompClient }) {
-  const [userName, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
   const [session, setSession] = useState("");
 
@@ -11,7 +11,7 @@ function Login({ socket, stompClient }) {
   const navigate = useNavigate();
 
   const params = {
-    username: userName,
+    username: username,
     password: password,
   };
   const options = {
@@ -30,10 +30,10 @@ function Login({ socket, stompClient }) {
 
   useEffect(() => {
     if (session != "") {
-      localStorage.setItem("userName", userName);
+      localStorage.setItem("username", username);
       localStorage.setItem("session", session);
       navigate("/lobby", {
-        state: { userName: userName, password: password, session: session },
+        state: { username: username, password: password, session: session },
       });
     }
   }, [session]);
@@ -51,7 +51,7 @@ function Login({ socket, stompClient }) {
   const login = () => {
     console.log(
       "Bruker trykket login med brukernavn:" +
-        userName +
+        username +
         " og passord: " +
         password
     );
@@ -75,7 +75,7 @@ function Login({ socket, stompClient }) {
               </label>
               <input
                 className="input"
-                value={userName}
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
               ></input>
             </div>
