@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PlayerHand from "./PlayerHand";
 import DiscardPile from "./DiscardPile";
@@ -7,8 +7,6 @@ import Opponent from "./Opponent";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import testData from "../data/testdata.json";
-
-const ENDPOINT = "http://localhost:8080";
 
 const GameRoom = () => {
   // Get data from mock JSON for testing
@@ -27,73 +25,68 @@ const GameRoom = () => {
   // WEBSOCKET
   // **********
   const ENDPOINT = "http://localhost:8080";
-  const socket = new SockJS(ENDPOINT + "/uno");
-  const stompClient = Stomp.over(socket);
-  // init socket state
-  const [gameState, setGameState] = useState(null);
 
+  // init stompClient from localStorage
+  const stompClientRef = useRef(() => {
+    const saved = localStorage.getItem("stompClient");
+    const initialValue = JSON.parse(saved);
+    return initialValue || null;
+  });
+
+  // init username from localStorage
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("username");
+    const initialValue = saved;
+    return initialValue || "";
+  });
+
+  // init gameID from localStorage
+  const [gameID, setGameID] = useState(() => {
+    const saved = localStorage.getItem("activeRoom");
+    const initialValue = saved;
+    return initialValue || "";
+  });
+
+  // init session from localStorage
+  const session = () => {
+    const saved = localStorage.getItem("session");
+    const initialValue = saved;
+    return initialValue || "";
+  };
   // message state
   const [message, setMessage] = useState(null);
   // Create and connect to socket
 
   useEffect(() => {
-    stompClient.connect({}, () => {
-      console.log("Connected to the websocket server");
-
-      stompClient.subscribe("/gameroom/1", (message) => {
-        console.log("Received message:", message);
-      });
+    const socket = new SockJS(ENDPOINT + "/uno");
+    const stompClient = Stomp.over(socket);
+    stompClient.connect({ username: localStorage.username }, (frame) => {
+      console.log("Connected to the websocket server " + frame);
+      stompClient.subscribe(`/user/topic/gameroom/${gameID}`, (message) =>
+        onMessageReceived(message)
+      );
+      stompClient.subscribe(`/topic/gameroom/${gameID}`, (message) =>
+        onMessageReceived(message)
+      );
+      stompClient.send(`/api/gameroom/${gameID}`, {}, {});
     });
+    stompClientRef.current = stompClient;
   }, []);
-
-  const onConnected = () => {
-    console.log("onConnected");
-    // Subscribe to the Game Room API
-    stompClient.subscribe(
-      ENDPOINT + "/gameroom/" + gameState.gameID,
-      this.onMessageReceived
-    );
-    stompClient.subscribe(
-      ENDPOINT + "/api/gameroom/" + gameState.gameID,
-      this.onMessageReceived
-    );
-  };
   const onMessageReceived = (payload) => {
     console.log("onMessageReceived");
     var message = JSON.parse(payload.body);
-  };
-  const onError = (error) => {
-    this.setState({
-      error:
-        "Could not connect you to the Uno Server. Please refresh this page and try again!",
-    });
-  };
-  const sendMessage = (msg) => {
-    var messageContent = "test";
-    if (messageContent && stompClient) {
-      var gameStateMessage = {
-        sender: this.state.name,
-        content: "Heey there",
-        type: "GAMESTATE",
-      };
-      stompClient.send(
-        "/uno/" + gameState.gameID,
-        { name: yourPlayer.name },
-        JSON.stringify(gameStateMessage)
-      );
-    }
   };
 
   // **********
   // GAME
   // **********
+  const [gameState, setGameState] = useState(null);
 
-  const [gameID, setGameID] = useState(null);
   const [playDirection, setPlayDirection] = useState("");
   const [playerTurn, setPlayerTurn] = useState("");
 
   // Aktiv spiller
-  const [yourPlayer, setYourPlayer] = useState("");
+  const [yourPlayer, setYourPlayer] = useState(null);
   const [yourPlayerHand, setYourPlayerHand] = useState(null);
 
   // Motstandere, finnes kanskje en bedre måte å gjøre dette på men for nå har vi en state per motstander (9 motstandere)
@@ -156,7 +149,7 @@ const GameRoom = () => {
     // Rekkefølge: gameID, playerTurn, playDirection, player1-10, deck, discard
     // Checks if the message is empty and if the user is currently logged in
     if (message.trim() && localStorage.getItem("userName")) {
-      stompClient.send("message", {
+      stompClientRef.send("message", {
         gameID: gameID,
         playerTurn: playerTurn,
         playDirection: playDirection,

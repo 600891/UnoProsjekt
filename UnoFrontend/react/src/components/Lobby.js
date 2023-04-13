@@ -203,10 +203,9 @@ const Lobby = () => {
   }
 
   function sendUsersToGame(gameId) {
-    console.log("Hello from sendUsersToGame");
-    console.log(gameId);
     if (localStorage.getItem("activeRoom") === gameId) {
       // if you are in the started game, go to game room
+      // Note - all neccessary states are saved in localStorage and can be retrieved in gameRoom
       navigate("/gameroom", { replace: true });
     }
   }
