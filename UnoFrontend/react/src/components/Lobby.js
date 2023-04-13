@@ -4,14 +4,14 @@ import GameSessionCard from "./GameSessionCard";
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 
-function Lobby() {
+const Lobby = () => {
   //states
   // to display current game rooms. Must be fetched from backend
   const [gameRooms, setGameRooms] = useState([]);
   // sets the currnet user from backend
-  const [user, setUser] = useState({});
-  const [activeRoom, setActiveRoom] = useState(null);
-  const [isGameCreator, setIsGameCreator] = useState(false);
+  const user = useRef({});
+  const activeRoom = useRef(null);
+  const isGameCreator = useRef(false);
 
   //**********
   // WEBSOCKETS
@@ -21,11 +21,12 @@ function Lobby() {
 
   // must fetch data to be displayed in the lobby and make sure the user is logged in
   const fetchData = () => {
-    setUser({
+    const setUser = {
       username: location.state.username,
       password: location.state.password,
       session: location.state.session,
-    });
+    };
+    user.current = setUser;
   };
 
   // connect to websocket for lobby and subscribe to lobby rooms, then get list of lobbies
@@ -35,8 +36,12 @@ function Lobby() {
     const stompClient = Stomp.over(socket);
     stompClient.connect({ username: location.state.username }, (frame) => {
       console.log("Connected to the websocket server " + frame);
-      stompClient.subscribe("/user/topic/lobby", onMessageReceived);
-      stompClient.subscribe("/topic/lobby", onMessageReceived);
+      stompClient.subscribe("/user/topic/lobby", (message) =>
+        onMessageReceived(message)
+      );
+      stompClient.subscribe("/topic/lobby", (message) =>
+        onMessageReceived(message)
+      );
       stompClient.send("/api/lobby", {}, {});
     });
     stompClientRef.current = stompClient;
@@ -48,9 +53,10 @@ function Lobby() {
 
   // called when the client receives a STOMP message from the server
   // checks the message type and does the appropriate action
+  // IMPORTANT! This callback method can not use states.
   const onMessageReceived = (message) => {
     const messageObj = JSON.parse(message.body);
-
+    console.log(messageObj);
     // handle all message types:
 
     // errorMessage-property
@@ -59,6 +65,7 @@ function Lobby() {
     }
     // listOfGames-property
     else if (messageObj.hasOwnProperty("listOfGames")) {
+      console.log(messageObj.listOfGames);
       showGameRooms(messageObj.listOfGames);
     } else if (messageObj.hasOwnProperty("event")) {
       const event = messageObj.event;
@@ -67,8 +74,9 @@ function Lobby() {
         case "CREATE_GAME_EVENT":
           if (messageObj.username === location.state.username) {
             // set that the user created a game if the current user was the one who created the game
-            setIsGameCreator(true);
-            setActiveRoom(messageObj.gameId);
+            isGameCreator.current = true;
+            activeRoom.current = messageObj.gameId;
+            console.log(activeRoom.current);
           }
           // send a request for all game rooms when a new game is created
           stompClientRef.current.send("/api/lobby", {}, {});
@@ -77,7 +85,7 @@ function Lobby() {
         case "JOIN_GAME_EVENT":
           if (messageObj.username === location.state.username) {
             // set the users currently active room if you were the user joining the game
-            setActiveRoom(messageObj.gameId);
+            activeRoom.current = messageObj.gameId;
           }
 
           // then re-fetch the games list
@@ -85,14 +93,14 @@ function Lobby() {
           break;
         // event-property - event er LEAVE_GAME_EVENT
         case "LEAVE_GAME_EVENT":
-          console.log(messageObj.username);
           if (messageObj.username === location.state.username) {
-            setActiveRoom(null);
+            activeRoom.current = null;
           }
           stompClientRef.current.send("/api/lobby", {}, {});
           break;
         // event-property - event er START_GAME_EVENT
         case "START_GAME_EVENT":
+          sendUsersToGame(messageObj.gameId);
           break;
         default:
           console.log("Could not handle message");
@@ -129,6 +137,7 @@ function Lobby() {
   const handleLeaveGame = (gameRoom) => {
     // Send message to leave currently joined game
     if (stompClientRef !== null && activeRoom) {
+      console.log(activeRoom.current);
       stompClientRef.current.send("/api/lobby/game/leave", {}, {});
     } else {
       console.log("You are not in a room");
@@ -147,7 +156,8 @@ function Lobby() {
   const handleStartGame = (gameRoom) => {
     // send start game message to backend
     if (stompClientRef !== null) {
-      stompClientRef.current.send(`api/lobby/game/start/${gameRoom}`, {}, {});
+      console.log(gameRoom);
+      stompClientRef.current.send(`/api/lobby/game/start/${gameRoom}`, {}, {});
     }
   };
 
@@ -169,8 +179,18 @@ function Lobby() {
   }
 
   function isRoomReady() {
-    console.log(getRoomById(activeRoom).gameParticipants.length > 2);
-    return getRoomById(activeRoom).gameParticipants.length > 2;
+    console.log(getRoomById(activeRoom.current).gameParticipants.length > 2);
+    return getRoomById(activeRoom.current).gameParticipants.length > 2;
+  }
+
+  function sendUsersToGame(gameId) {
+    console.log("Hello from sendUsersToGame");
+    console.log(activeRoom.current);
+    console.log(gameId);
+    if (activeRoom.current === gameId) {
+      // if you are in the started game, go to game room
+      navigate("/gameroom", { replace: true });
+    }
   }
 
   return (
@@ -182,29 +202,28 @@ function Lobby() {
             {gameRooms &&
               gameRooms.map((gameRoom, i) => (
                 <div className="block" key={i}>
-                  {activeRoom ? (
+                  {activeRoom.current ? (
                     <GameSessionCard
                       key={i}
                       gameRoom={gameRoom}
                       onClick={() => handleLeaveGame(gameRoom)}
-                      activeRoom={activeRoom}
+                      activeRoom={activeRoom.current}
                     />
                   ) : (
                     <GameSessionCard
                       key={i}
                       gameRoom={gameRoom}
                       onClick={() => handleJoinGame(gameRoom)}
-                      activeRoom={activeRoom}
+                      activeRoom={activeRoom.current}
                     />
                   )}
                 </div>
               ))}
           </div>
-          {isGameCreator ? (
+          {isGameCreator.current ? (
             <button
               className="button"
-              disabled={!isRoomReady}
-              onClick={() => handleStartGame(activeRoom)}
+              onClick={() => handleStartGame(activeRoom.current)}
             >
               Start game
             </button>
@@ -220,6 +239,6 @@ function Lobby() {
       </div>
     </div>
   );
-}
+};
 
 export default Lobby;
