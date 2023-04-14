@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function Login({ socket, stompClient }) {
   const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
-  const [session, setSession] = useState("");
+  const [loggedIn, setLogin] = useState(false);
 
   const [data, setData] = useState({});
   const [error, setError] = useState("");
@@ -20,24 +20,25 @@ function Login({ socket, stompClient }) {
     headers: { "Content-Type": "application/json" },
   };
 
-  async function testPost() {
+  async function getServerResponse() {
     await fetch("http://localhost:8080/login", options)
       .then((response) => response.text())
       .then((response) => {
-        setSession(response);
+        console.log("The response from loginController is: " + response);
+        if (response === "true") setLogin(true);
       });
   }
 
   useEffect(() => {
-    if (session != "") {
+    if (loggedIn) {
       localStorage.setItem("username", username);
-      localStorage.setItem("session", session);
+      localStorage.setItem("session", loggedIn);
       navigate("/lobby", {
-        state: { username: username, password: password, session: session },
+        state: { username: username, password: password, session: loggedIn },
       });
     }
-  }, [session]);
-
+  }, [loggedIn]);
+  //Test. Not in use
   async function fetchData() {
     fetch("http://localhost:8080/login")
       .then((response) => response.text()) // parse response as text
@@ -56,7 +57,7 @@ function Login({ socket, stompClient }) {
         password
     );
 
-    testPost();
+    getServerResponse();
   };
   // Redirects users to the createuser page
   const createUserNav = () => {
