@@ -1,19 +1,29 @@
 import React from "react";
 
 function GameSessionCard(props) {
-  const { gameRoomName } = props;
-
+  const { gameRoom, onClick, activeRoom } = props;
+  //console.log(gameRoom.gameId + " " + activeRoom);
   return (
     <div>
       <div className="framing">
         <div>
           {" "}
-          <h2>{gameRoomName}</h2>
+          <h2>{gameRoom.gameCreator} sitt rom</h2>
         </div>
         <div>
-          <p>Number of players: </p>
+          {gameRoom.gameParticipants && (
+            <p>Number of players: {gameRoom.gameParticipants.length}</p>
+          )}
         </div>
-        <button className="button">Join the game </button>
+        {activeRoom === gameRoom.gameId ? (
+          <button className="button" onClick={onClick}>
+            Leave game{" "}
+          </button>
+        ) : (
+          <button className="button" onClick={onClick}>
+            Join the game{" "}
+          </button>
+        )}
       </div>
     </div>
   );

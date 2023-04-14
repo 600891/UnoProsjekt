@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
-  const [userName, setUsername] = useState("");
+function Login({ socket, stompClient }) {
+  const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
   const [session, setSession] = useState("");
 
@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
 
   const params = {
-    username: userName,
+    username: username,
     password: password,
   };
   const options = {
@@ -29,11 +29,13 @@ function Login() {
   }
 
   useEffect(() => {
-    console.log(session);
-    if (session != "")
+    if (session != "") {
+      localStorage.setItem("username", username);
+      localStorage.setItem("session", session);
       navigate("/lobby", {
-        state: { userName: userName, password: password, session: session },
+        state: { username: username, password: password, session: session },
       });
+    }
   }, [session]);
 
   async function fetchData() {
@@ -49,7 +51,7 @@ function Login() {
   const login = () => {
     console.log(
       "Bruker trykket login med brukernavn:" +
-        userName +
+        username +
         " og passord: " +
         password
     );
@@ -73,7 +75,7 @@ function Login() {
               </label>
               <input
                 className="input"
-                value={userName}
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
               ></input>
             </div>

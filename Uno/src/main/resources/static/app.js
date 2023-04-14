@@ -18,13 +18,16 @@ function connect() {
     stompClient.connect({'username': $("#name").val()}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
+        showGreeting('Connected: ' + frame);
         stompClient.subscribe('/user/topic/lobby', function (greeting) {
             showGreeting(greeting.body);
         });
         stompClient.subscribe('/topic/lobby', function (response) {
-//            var parsedResponse = JSON.parse(response.body);
+           //var parsedResponse = JSON.parse(response.body);
+           //console.log(response.body);
             showGreeting(response.body);
         });
+        lobby(); // update with existing games at startup
     });
 }
 
@@ -36,16 +39,28 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendInput() {
-    stompClient.send("/app/join", {}, JSON.stringify({'input': $("#input").val()}));
-}
+//function sendInput() {
+//    stompClient.send("/api/join", {}, JSON.stringify({'input': $("#input").val()}));
+//}
 
 function createGame() {
-    stompClient.send("/app/lobby/game/create", {}, {});
+    stompClient.send("/api/lobby/game/create", {}, {});
 }
 
 function lobby() {
-    stompClient.send("/app/lobby", {}, {});
+    stompClient.send("/api/lobby", {}, {});
+}
+
+function joinGameInLobby() {
+    stompClient.send("/api/lobby/game/join/" + $("#gameId").val(), {}, {})
+}
+
+function leaveGameInLobby() {
+    stompClient.send("/api/lobby/game/leave", {}, {});
+}
+
+function startGameInLobby() {
+    stompClient.send("/api/lobby/game/start/" + $("#gameId").val(), {}, {})
 }
 
 function showGreeting(message) {
@@ -59,7 +74,10 @@ $(function () {
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { createGame(); });
-    $( "#join-lobby" ).click(function() { lobby(); });
+    $( "#check-lobby" ).click(function() { lobby(); });
+    $( "#join-game-lobby" ).click(function() { joinGameInLobby(); })
+    $( "#leave-game-lobby" ).click(function() { leaveGameInLobby(); })
+    $( "#start-game-lobby" ).click(function() { startGameInLobby(); })
     //$( "#send" ).click(function() { sendInput(); });
 });
 
