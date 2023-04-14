@@ -21,43 +21,45 @@ const GameRoom = () => {
     navigate("/lobby", { replace: true });
   };
 
-  // **********
-  // WEBSOCKET
-  // **********
-  const ENDPOINT = "http://localhost:8080";
+  //**********
+  // INIT FROM LOCALSTORAGE
+  //**********
 
-  // init stompClient from localStorage
   const stompClientRef = useRef(() => {
     const saved = localStorage.getItem("stompClient");
     const initialValue = JSON.parse(saved);
     return initialValue || null;
   });
 
-  // init username from localStorage
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("username");
     const initialValue = saved;
     return initialValue || "";
   });
 
-  // init gameID from localStorage
   const [gameID, setGameID] = useState(() => {
     const saved = localStorage.getItem("activeRoom");
     const initialValue = saved;
     return initialValue || "";
   });
 
-  // init session from localStorage
   const session = () => {
     const saved = localStorage.getItem("session");
     const initialValue = saved;
     return initialValue || "";
   };
+
+  // **********
+  // WEBSOCKET
+  // **********
+  const ENDPOINT = "http://localhost:8080";
+
   // message state
   const [message, setMessage] = useState(null);
-  // Create and connect to socket
 
+  // Create and connect to socket
   useEffect(() => {
+    // If there is no connection, connect
     const socket = new SockJS(ENDPOINT + "/uno");
     const stompClient = Stomp.over(socket);
     stompClient.connect({ username: localStorage.username }, (frame) => {
@@ -70,11 +72,26 @@ const GameRoom = () => {
       );
       stompClient.send(`/api/gameroom/${gameID}`, {}, {});
     });
-    stompClientRef.current = stompClient;
   }, []);
+
   const onMessageReceived = (payload) => {
-    console.log("onMessageReceived");
-    var message = JSON.parse(payload.body);
+    const messageObj = JSON.parse(message.body);
+    console.log(messageObj);
+    // handle all message types:
+
+    // errorMessage-property
+    if (messageObj.hasOwnProperty("errorMessage")) {
+      console.log("Error Message: " + message);
+    } else if (messageObj.hasOwnProperty("event")) {
+      const event = messageObj.event;
+      switch (event) {
+        case "START_GAME_EVENT":
+          setUpGame(messageObj);
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   // **********
@@ -106,10 +123,8 @@ const GameRoom = () => {
   const [currentColor, setCurrentColor] = useState("");
   const [deck, setDeck] = useState("");
 
-  // Runs once on component mount, sets up game data from initial game state
-  useEffect(() => {
-    setGameState(data);
-  }, []);
+  // Set up the game when you receive a start game message
+  const setUpGame = (message) => {};
 
   // Denne useEffecten skal kun hente info fra gameState! Henter man info fra andre ting kan det være det ikke blir lastet
   // Kan feks ikke sette currentColor fra currentTopCard, den må settes fra gameState.
