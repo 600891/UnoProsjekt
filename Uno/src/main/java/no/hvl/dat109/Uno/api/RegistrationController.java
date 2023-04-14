@@ -35,7 +35,7 @@ public class RegistrationController {
                                HttpServletRequest request,
                                RedirectAttributes ra) {
         //checks if user is already in database
-        if (db.findPlayerByUsername(user) != null) {
+        if (db.findUserByUsername(user) != null) {
             ra.addFlashAttribute("redirectMessage", USERNAME_ALREADY_USED_MESSAGE);
             return "redirect:" + REGISTRATION_URL;}
 

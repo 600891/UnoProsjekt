@@ -1,7 +1,8 @@
 package no.hvl.dat109.Uno.api;
 
 import jakarta.servlet.http.HttpServletRequest;
-import no.hvl.dat109.Uno.persistence.entity.Player;
+import jakarta.servlet.http.HttpSession;
+import no.hvl.dat109.Uno.persistence.entity.User;
 import no.hvl.dat109.Uno.service.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,14 +29,30 @@ public class LoginController {
     @PostMapping
     public String logIn(@RequestParam String username, @RequestParam String pword, HttpServletRequest request, RedirectAttributes ra) {
 
-        if (!username.equals("") && !pword.equals("")) {
+        if (!username.equals("") && !pword.equals("")) { // Empty username or password
             ra.addFlashAttribute("redirectMessage", INVALID_USERNAME_MESSAGE);
             return "redirect:" + LOGIN_URL;
         }
 
+        //Conntecting to databse to check if info is correct
+        User user = persistenceService.findUserByUsername(username);
 
-        ra.addFlashAttribute("redirectMessage", INVALID_USERNAME_MESSAGE);
-        return "redirect:" + LOGIN_URL;
+        if (user == null) {
+            return "USER NOT FOUND";
+        }
+
+        String savedHash = user.getPasswordHash();
+        String newHash = user.getPasswordHash();
+        //String newHash = RegistrationUtil.hashPassword(pword);
+
+
+        if(!savedHash.equals(newHash)) {
+            return "WRONG PASSWORD";
+        }
+
+        return "LOGGED IN";
 
     }
+
+
 }
