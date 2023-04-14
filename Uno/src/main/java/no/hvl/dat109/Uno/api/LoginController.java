@@ -19,13 +19,22 @@ public class LoginController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
-    public String getRegisterView( @RequestBody() String data ) {
-        int sessionId = new Random().nextInt(0,1000000);
-        String sessionString = String.valueOf(sessionId);
+    public Boolean logIn( @RequestBody() String data ) {
 
+        //TODO Her må det implementeres logikk for å sjekke om bruker med brukernavn og passord finnes i databasen
         System.out.println(data);
-        // Setter en tullesession med random klassen. Må endres senere
-        return sessionString;
+
+        if(data.length() > 29){
+            // om bruker eksisterer returneres true. Bruker må også settes til innlogget på backendsiden.
+            // må ha en metode som kan kalles fra frontend for å sjekke om en gitt bruker er logget inn.
+            return true;
+        }else{
+
+            return false;
+        }
+
+
+
     }
 
 }
