@@ -21,12 +21,11 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/uno").withSockJS();
+        registry.addEndpoint("/uno").setAllowedOrigins("localhost:3000").withSockJS();
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new UserInterceptor());
     }
-
 }
