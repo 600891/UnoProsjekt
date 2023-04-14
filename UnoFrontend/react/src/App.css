@@ -1,0 +1,264 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* GameRoom.js parent div */
+.Game {
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+}
+
+/* GameRoom.js Background */
+.backgroundColorred {
+  background-image: url("./assets/backgrounds/bgR.png");
+}
+
+.backgroundColorgreen {
+  background-image: url("./assets/backgrounds/bgG.png");
+}
+
+.backgroundColorblue {
+  background-image: url("./assets/backgrounds/bgB.png");
+}
+
+.backgroundColoryellow {
+  background-image: url("./assets/backgrounds/bgY.png");
+}
+
+.navBar {
+  display: flex;
+  height: 7%;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), 70%, rgba(0, 0, 0, 0));
+  color: white;
+}
+
+.navBar h1 {
+  padding: 0px 20px 0px 20px;
+}
+
+/* Game Container */
+
+.gameTable {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 93%;
+  width: 100%;
+}
+
+.middleTable {
+  height: 100%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* UNO Cards */
+.Card {
+  width: 6em;
+  margin: 2px;
+  cursor: pointer;
+}
+
+/* Opponent Info */
+
+.opponentsLeft img {
+  transform: rotate(90deg);
+}
+
+.opponentsRight img {
+  transform: rotate(270deg);
+}
+
+.opponentsTop img {
+  transform: rotate(180deg);
+}
+
+.opponentcontainer {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.opponentcontainer p {
+  margin: 0%;
+}
+
+.opponentinfo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: large;
+  text-shadow: black 0 0 10px;
+}
+
+/* Styles for login, create user and lobby page */
+.background-image {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("./assets/backgrounds/loginBackground.jpg");
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  width: 15%;
+  height: 70%;
+  justify-content: space-around;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.center {
+  text-align: center;
+}
+
+.inputfield {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.button {
+  margin: 12px;
+  background-color: #4c68af;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 10px #888888;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0f255b;
+  box-shadow: 0px 8px 15px #888888;
+  transform: translateY(-3px);
+}
+
+.button:active {
+  background-color: #152c67;
+  box-shadow: 0px 2px 5px #888888;
+  transform: translateY(0px);
+}
+
+.input {
+  font-size: 16px;
+  color: #333;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 5px 10px #888888;
+  background-color: #f2f2f2;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.white-text {
+  color: #f2f2f2;
+}
+
+label {
+  font-size: xx-large;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 75vh;
+}
+
+.h1 {
+  font-size: 300%;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+p {
+  font-size: 100%;
+  font-weight: 600;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+/* gameSessionCard */
+
+.framing {
+  border-radius: 20px;
+  background-color: #f2f2f2;
+  width: 200px;
+
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.9);
+}
+
+.row {
+  width: 100%;
+  margin: 40 auto;
+}
+.block {
+  width: auto;
+  display: inline-block;
+  margin: 20px;
+}
