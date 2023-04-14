@@ -40,16 +40,19 @@ const Lobby = () => {
     fetchData();
     const socket = new SockJS(ENDPOINT + "/uno");
     const stompClient = Stomp.over(socket);
-    stompClient.connect({ username: location.state.username }, (frame) => {
-      console.log("Connected to the websocket server " + frame);
-      stompClient.subscribe("/user/topic/lobby", (message) =>
-        onMessageReceived(message)
-      );
-      stompClient.subscribe("/topic/lobby", (message) =>
-        onMessageReceived(message)
-      );
-      stompClient.send("/api/lobby", {}, {});
-    });
+    stompClient.connect(
+      { username: localStorage.getItem("username") },
+      (frame) => {
+        console.log("Connected to the websocket server " + frame);
+        stompClient.subscribe("/user/topic/lobby", (message) =>
+          onMessageReceived(message)
+        );
+        stompClient.subscribe("/topic/lobby", (message) =>
+          onMessageReceived(message)
+        );
+        stompClient.send("/api/lobby", {}, {});
+      }
+    );
     stompClientRef.current = stompClient;
   }, []);
 
