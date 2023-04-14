@@ -2,6 +2,7 @@ package no.hvl.dat109.Uno.controllers;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
+import no.hvl.dat109.Uno.service.PersistenceService;
 import no.hvl.dat109.Uno.utils.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +17,7 @@ public class LoginController {
     @Value("${}") private String LOGIN_URL;
 
     @Autowired
-    DatabaseService db;
+    PersistenceService db;
 
     @GetMapping
     public boolean getRegisterView(){
@@ -33,9 +34,9 @@ public class LoginController {
         return "redirect:" + LOGIN_URL;
     }
 
-    DatabaseService user = db.findUser(name);
+    PersistenceService user = db.findUser(username);
 
-    if(user == null) {
+    if(username == null) {
         ra.addFlashAttribuite("redirectMessage", INVALID_USERNAME_MESSAGE);
         return "redirect:" + LOGIN_URL;
     }
