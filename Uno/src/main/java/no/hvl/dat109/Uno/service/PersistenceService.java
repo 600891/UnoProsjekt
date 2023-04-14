@@ -24,8 +24,10 @@ public class PersistenceService {
         return userRepo.save(user);
     }
 
-    public User fintUserByUsername(String username) {
-        User user = new
+    public User findUserByUsername(String username) {
+        User user = new User();
+        user.setUsername(username);
+        return user;
     }
 
     public Player findPlayerByUsername(String username) {

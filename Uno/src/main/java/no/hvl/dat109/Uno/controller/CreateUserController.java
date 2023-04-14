@@ -1,4 +1,4 @@
-package no.hvl.dat109.Uno.controllers;
+package no.hvl.dat109.Uno.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import no.hvl.dat109.Uno.persistence.entity.Player;
@@ -40,7 +40,7 @@ public class CreateUserController {
                                HttpServletRequest request,
                                RedirectAttributes ra) {
         //checks if user is already in database
-        if (db.findPlayerByUsername(username) != null) {
+        if (db.findUserByUsername(username) != null) {
             ra.addFlashAttribute("redirectMessage", USERNAME_ALREADY_USED_MESSAGE);
             return "redirect:" + CREATREUSER_URL;
         }
@@ -59,7 +59,7 @@ public class CreateUserController {
 
         //Hash og salt password, adds to database
         byte[] salt = CreateUserUtil.getSalt();
-        String hash =CreateUserUtil.hashPassword(pword, salt);
+        String hash = CreateUserUtil.hashPassword(pword, salt);
 
         User user = new User(player_id, username, passwordhash, name, email, passwordsalt);
         db.createUser(user);

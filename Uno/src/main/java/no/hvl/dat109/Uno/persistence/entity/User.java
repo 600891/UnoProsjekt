@@ -33,4 +33,28 @@ public class User {
     public User() {
 
     }
+
+    public Long getPlayer_id() {return player_id;}
+
+    public String getPasswordhash() {return passwordhash;}
+
+    public String getName() {return name;}
+
+    public String getUsername() {return username;}
+
+    public String getEmail() {return email;}
+
+    public byte[] getPasswordsalt() {return passwordsalt;}
+
+    public void setPlayer_id(Long player_id) {this.player_id = player_id;}
+
+    public void setUsername(String username) {this.username = username;}
+
+    public void setPasswordhash(String passwordhash) {this.passwordhash = passwordhash;}
+
+    public void setName(String name) {this.name = name;}
+
+    public void setEmail(String email) {this.email = email;}
+
+    public void setPasswordsalt(byte[] passwordsalt) {this.passwordsalt = passwordsalt;}
 }
