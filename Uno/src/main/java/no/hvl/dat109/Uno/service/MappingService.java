@@ -27,28 +27,28 @@ public class MappingService {
     public GameStateResponse mapGameState(Game game){
         List<PlayerResponse> players = new ArrayList<>();
         for(Player player : game.getPlayers()){
-            players.add(map(player));
+            players.add(mapPlayer(player));
         }
         List<CardResponse> deck = new ArrayList<>();
         for(Card card: game.getDeck().getDeck()){
-            deck.add(map(card));
+            deck.add(mapCard(card));
         }
         List<CardResponse> discard = new ArrayList<>();
         for(Card card: game.getDeck().getDeck()){
-            discard.add(map(card));
+            discard.add(mapCard(card));
         }
         return new GameStateResponse(game.getUuid(), game.getActivePlayer().getName(), game.getPlayDirection(),players,deck,discard);
     }
 
-    public PlayerResponse map(Player player){
+    public PlayerResponse mapPlayer(Player player){
         List<CardResponse> hand = new ArrayList<>();
         for(Card card: player.getHand()){
-            hand.add(map(card));
+            hand.add(mapCard(card));
         }
         return new PlayerResponse(player.getName(), hand);
     }
 
-    public CardResponse map(Card card){
+    public CardResponse mapCard(Card card){
         String cardID = Integer.toString(card.getId());
         String color = card.getColor().toString().toLowerCase();
         String value = card.getValue().toString().toLowerCase();

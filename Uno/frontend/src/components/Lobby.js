@@ -29,6 +29,7 @@ const Lobby = () => {
   // WEBSOCKETS
   //**********
   const ENDPOINT = "http://localhost:8080";
+
   const stompClientRef = useRef(() => {
     const saved = localStorage.getItem("stompClient");
     const initialValue = JSON.parse(saved);
@@ -69,7 +70,7 @@ const Lobby = () => {
 
   useEffect(() => {
     localStorage.setItem("stompClient", stompClientRef.current);
-  }, [stompClientRef.current]);
+  }, [stompClientRef]);
 
   //**********
   // MESSAGE HANDLING
@@ -77,7 +78,7 @@ const Lobby = () => {
 
   // called when the client receives a STOMP message from the server
   // checks the message type and does the appropriate action
-  // IMPORTANT! This callback method can not use states.
+  // IMPORTANT! This callback method can not read states, only update them.
   const onMessageReceived = (message) => {
     const messageObj = JSON.parse(message.body);
     console.log(messageObj);

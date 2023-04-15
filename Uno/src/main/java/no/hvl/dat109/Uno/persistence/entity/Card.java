@@ -39,10 +39,13 @@ public class Card {
         this.color = color;
     }
 
-
     @Override
     public String toString() {
-        return "Card [color=" + color + "]";
+        return "Card{" +
+                "id=" + id +
+                ", color=" + color +
+                ", value=" + value +
+                '}';
     }
 
     @Override
