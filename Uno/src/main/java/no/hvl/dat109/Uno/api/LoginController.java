@@ -34,17 +34,23 @@ public class LoginController {
         //Conntecting to databse to check if info is correct
         User user = db.findUserByUsername(username);
 
+        System.out.println("Username: " + user.getUsername() + " Password: " + user.getPasswordHash());
+
         if (user == null) {
             // User not found in database
             return false;
         }
 
         String savedHash = user.getPasswordHash();
-        String newHash = user.getPasswordHash();
         //String newHash = RegistrationUtil.hashPassword(pword);
 
+
+        // Dette er en helt unødvendig if, men for testing...
+        if (!username.equals(user.getUsername())) {
+            return false;
+        }
         // Checking if password is correct, and loging in is so
-        if(!savedHash.equals(newHash)) {
+        if(!savedHash.equals(pword)) {
 
             return false;
         }

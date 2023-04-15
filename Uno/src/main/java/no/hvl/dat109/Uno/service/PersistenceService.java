@@ -21,9 +21,6 @@ public class PersistenceService {
     private PlayerRepo playerRepo;
 
     public User findUserByUsername(String username) {
-        // TODO implementer funksjonen mot basen og slett det som er under
-
-
         return userRepo.findByUsername(username);
     }
 
