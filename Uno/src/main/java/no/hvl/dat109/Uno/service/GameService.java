@@ -2,6 +2,7 @@ package no.hvl.dat109.Uno.service;
 
 import no.hvl.dat109.Uno.enums.ColorEnum;
 import no.hvl.dat109.Uno.enums.GameStateEnum;
+import no.hvl.dat109.Uno.enums.ValueEnum;
 import no.hvl.dat109.Uno.service.model.CardCollection;
 import no.hvl.dat109.Uno.persistence.entity.Card;
 import no.hvl.dat109.Uno.persistence.entity.Game;
@@ -116,6 +117,27 @@ public class GameService {
         startedGames.add(game);
         game.setGameState(GameStateEnum.STARTED);
 
+        // Lage deck
+        CardCollection deck = makeDeck();
+        // Shuffle deck
+        deck.shuffleDeck();
+        // Legg til deck til spillobjekt
+        game.setDeck(deck);
+        // Dele ut kort
+        distributeCards(game.getPlayers(), game.getDeck());
+        // Lage discard pile
+        CardCollection discard = makeDiscardPile(game.getDeck());
+        // Sett spillets discard pile
+        game.setDiscard(discard);
+        // Sette currentPlayer til den som lagde spillet
+        Player creator;
+        for(Player player : game.getPlayers()){
+            if(player.getName() == username)    {
+                     creator = player;
+                     game.setActivePlayer(creator);
+            }
+        }
+
         // TODO persist
 
         return game;
@@ -183,9 +205,47 @@ public class GameService {
         CardCollection deck = new CardCollection();
         int id = 0;
         for (ColorEnum color: ColorEnum.values()) {
-            for (int i = 0; i < ConstantUtil.NUM_OF_CARDS/ConstantUtil.NUM_COLORS; i++) {
-                deck.addCard(new Card(id, color));
-                id++;
+            if(color.equals(ColorEnum.BLACK)){
+                for (int i = 0; i < 8; i++) {
+                    if(i <4){
+                        deck.addCard(new Card(id,color, ValueEnum.WILD));
+                    } else {
+                        deck.addCard(new Card(id, color, ValueEnum.DRAW));
+                    }
+                    id++;
+                }
+            }
+            else{
+                for(int i = 0; i < (ConstantUtil.NUM_OF_CARDS - 8) / (ColorEnum.values().length - 1); i++){
+                    if(i < 2){
+                        deck.addCard(new Card(id, color, ValueEnum.ONE));
+                    } else if (i < 4){
+                        deck.addCard(new Card(id, color, ValueEnum.TWO));
+                    }else if (i < 6){
+                        deck.addCard(new Card(id, color, ValueEnum.THREE));
+                    } else if (i < 8){
+                        deck.addCard(new Card(id, color, ValueEnum.FOUR));
+                    }else if (i < 10){
+                        deck.addCard(new Card(id, color, ValueEnum.FIVE));
+                    }else if (i < 12){
+                        deck.addCard(new Card(id, color, ValueEnum.SIX));
+                    } else if (i < 14){
+                        deck.addCard(new Card(id, color, ValueEnum.SEVEN));
+                    } else if (i < 16){
+                        deck.addCard(new Card(id, color, ValueEnum.EIGHT));
+                    }else if (i < 18){
+                        deck.addCard(new Card(id, color, ValueEnum.NINE));
+                    }else if (i < 20){
+                        deck.addCard(new Card(id, color, ValueEnum.REVERSE));
+                    }else if (i < 22){
+                        deck.addCard(new Card(id, color, ValueEnum.DRAW));
+                    }else if (i < 24){
+                        deck.addCard(new Card(id, color, ValueEnum.SKIP));
+                    } else {
+                        deck.addCard(new Card(id, color, ValueEnum.ZERO));
+                    }
+                    id++;
+                }
             }
         }
 

@@ -1,6 +1,7 @@
 package no.hvl.dat109.Uno.persistence.entity;
 
 import no.hvl.dat109.Uno.enums.ColorEnum;
+import no.hvl.dat109.Uno.enums.ValueEnum;
 
 import java.util.Objects;
 
@@ -10,10 +11,24 @@ public class Card {
 
     private int id;
     private ColorEnum color;
+    private ValueEnum value;
 
-    public Card(int id, ColorEnum color) {
+    public Card(int id, ColorEnum color, ValueEnum value) {
         this.color = color;
         this.id = id;
+        this.value = value;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ValueEnum getValue() {
+        return value;
+    }
+
+    public void setValue(ValueEnum value) {
+        this.value = value;
     }
 
     public ColorEnum getColor() {

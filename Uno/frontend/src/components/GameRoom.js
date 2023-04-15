@@ -72,8 +72,10 @@ const GameRoom = () => {
       stompClient.subscribe(`/topic/gameroom/${gameID}`, (message) =>
         onMessageReceived(message)
       );
-      stompClient.send(`/api/gameroom/${gameID}`, {}, {});
+      // send message to backend to receive initial game state
+      stompClient.send(`/api/gameroom/${gameID}/start`, {}, {});
     });
+    stompClientRef.current = stompClient;
   }, []);
 
   const onMessageReceived = (payload) => {
@@ -84,15 +86,9 @@ const GameRoom = () => {
     // errorMessage-property
     if (messageObj.hasOwnProperty("errorMessage")) {
       console.log("Error Message: " + message);
-    } else if (messageObj.hasOwnProperty("event")) {
-      const event = messageObj.event;
-      switch (event) {
-        case "START_GAME_EVENT":
-          setUpGame(messageObj);
-          break;
-        default:
-          break;
-      }
+    } else {
+      // If not error message, it is a game state message
+      console.log("Game state message: " + messageObj);
     }
   };
 
