@@ -7,10 +7,7 @@ import no.hvl.dat109.Uno.service.GameService;
 import no.hvl.dat109.Uno.service.MappingService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import no.hvl.dat109.Uno.enums.LobbyEvent;
 import no.hvl.dat109.Uno.persistence.entity.Game;
-import no.hvl.dat109.Uno.service.GameService;
-import no.hvl.dat109.Uno.service.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,7 +22,7 @@ public class GameRoomController {
     private final SimpMessagingTemplate messagingTemplate;
     private final GameService gameService;
     private final MappingService mappingService;
-    private final String MESSAGE_CHANNEL = "/topic/gameroom/{gameid}";
+    private final String MESSAGE_CHANNEL = "/topic/gameroom/";
 
     @Autowired
     public GameRoomController(SimpMessagingTemplate messagingTemplate, GameService gameService, MappingService mappingService) {
@@ -34,34 +31,36 @@ public class GameRoomController {
         this.mappingService = mappingService;
     }
 
-    @MessageMapping("/gamroom/{gameid}/start")
-    public void gameStart(SimpMessageHeaderAccessor accessor) {
+    @MessageMapping("/gameroom/{gameid}")
+    public void gameStart(SimpMessageHeaderAccessor accessor, @DestinationVariable String gameid) {
         Principal user = getUserPrincipal(accessor);
-        GameStateResponse response = mappingService.mapGameState(gameService.findGame(user.getName()));
-        messagingTemplate.convertAndSendToUser(user.getName(), MESSAGE_CHANNEL, response);
+        System.out.println("Hi from gameStart, " + user.getName());
+        GameStateResponse response = mappingService.mapGameState(gameService.findStartedGameById(gameid));
+        System.out.println(response);
+        messagingTemplate.convertAndSendToUser(user.getName(), MESSAGE_CHANNEL + gameid, response);
     }
 
-    @MessageMapping("/gamroom/{gameid}")
-    public void gameState(SimpMessageHeaderAccessor accessor, WebSocketMessage message) {
-        Principal user = getUserPrincipal(accessor);
-        GameStateResponse response = mappingService.mapGameState(gameService.findGame(user.getName()));
+    // @MessageMapping("/gamroom/{gameid}")
+    // public void gameState(SimpMessageHeaderAccessor accessor, @DestinationVariable String gameId, WebSocketMessage message) {
+    //     Principal user = getUserPrincipal(accessor);
+    //     GameStateResponse response = mappingService.mapGameState(gameService.findGame(user.getName()));
 
-        String jsonSpillTilstand = (String) message.getPayload();
+    //     String jsonGameState = (String) message.getPayload();
 
-        ObjectMapper objectMapper = new ObjectMapper();
+    //     ObjectMapper objectMapper = new ObjectMapper();
 
-        try {
-            Game game = objectMapper.readValue(jsonSpillTilstand, Game.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        messagingTemplate.convertAndSend(MESSAGE_CHANNEL, message.getPayload());
+    //     try {
+    //         Game game = objectMapper.readValue(jsonGameState, Game.class);
+    //     } catch (JsonProcessingException e) {
+    //         throw new RuntimeException(e);
+    //     }
 
 
+    //     messagingTemplate.convertAndSend(MESSAGE_CHANNEL, message.getPayload());
 
-    }
+
+
+    // }
 
     private Principal getUserPrincipal(SimpMessageHeaderAccessor accessor) {
         Principal user = accessor.getUser();

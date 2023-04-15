@@ -162,6 +162,15 @@ public class GameService {
         return notStartedGames.stream().filter(g -> g.getUuid().equals(gameId)).findFirst().orElse(null);
     }
 
+        /**
+     * this function finds the started game with the given gameId
+     * @param gameId the id of the game one wants to find
+     * @return the game found
+     */
+    public Game findStartedGameById(String gameId) {
+        return startedGames.stream().filter(g -> g.getUuid().equals(gameId)).findFirst().orElse(null);
+    }
+
     /**
      * this function determines if the given player is part of a game, either started or not
      * @param username the players username to search for

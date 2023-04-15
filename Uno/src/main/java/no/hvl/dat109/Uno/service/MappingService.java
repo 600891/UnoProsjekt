@@ -12,6 +12,8 @@ import java.util.List;
 @Service
 public class MappingService {
 
+    // Lobby responses
+
     public ListOfGamesResponse map(List<Game> games) {
         List<GameResponse> result = new ArrayList<>();
         games.forEach(game -> result.add(map(game)));
@@ -23,6 +25,7 @@ public class MappingService {
         return new GameResponse(game.getUuid(), game.getGameCreator().getName(), playerNames);
     }
 
+    // Game room responses
 
     public GameStateResponse mapGameState(Game game){
         List<PlayerResponse> players = new ArrayList<>();
@@ -34,7 +37,7 @@ public class MappingService {
             deck.add(mapCard(card));
         }
         List<CardResponse> discard = new ArrayList<>();
-        for(Card card: game.getDeck().getDeck()){
+        for(Card card: game.getDiscard().getDeck()){
             discard.add(mapCard(card));
         }
         return new GameStateResponse(game.getUuid(), game.getActivePlayer().getName(), game.getPlayDirection(),players,deck,discard);

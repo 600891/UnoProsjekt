@@ -73,12 +73,12 @@ const GameRoom = () => {
         onMessageReceived(message)
       );
       // send message to backend to receive initial game state
-      stompClient.send(`/api/gameroom/${gameID}/start`, {}, {});
+      stompClient.send(`/api/gameroom/${gameID}`, {}, {});
     });
     stompClientRef.current = stompClient;
   }, []);
 
-  const onMessageReceived = (payload) => {
+  const onMessageReceived = (message) => {
     const messageObj = JSON.parse(message.body);
     console.log(messageObj);
     // handle all message types:
