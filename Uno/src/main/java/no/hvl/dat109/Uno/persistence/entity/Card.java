@@ -13,6 +13,8 @@ public class Card {
     private ColorEnum color;
     private ValueEnum value;
 
+    public Card() {}
+
     public Card(int id, ColorEnum color, ValueEnum value) {
         this.color = color;
         this.id = id;
@@ -21,6 +23,10 @@ public class Card {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int nyId) {
+        this.id = nyId;
     }
 
     public ValueEnum getValue() {

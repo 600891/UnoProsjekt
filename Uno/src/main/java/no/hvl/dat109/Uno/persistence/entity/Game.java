@@ -18,19 +18,19 @@ public class Game {
     //@Column(name = "players")
     //@OneToMany
     private List<Player> players;
+
     //@Column(name = "active_player")
-
-    private CardCollection deck;
-    private CardCollection discard;
-
     private Player activePlayer;
-
-    private String playDirection;
-
-
 
     //@Column(name = "game_state")
     private GameStateEnum gameState;
+
+    private CardCollection deck;
+    private CardCollection discard;
+    private String playDirection;
+
+    public Game() {}
+
 
     public String getUuid() {
         return uuid;
@@ -94,5 +94,21 @@ public class Game {
 
     public void setPlayDirection(String playDirection) {
         this.playDirection = playDirection;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "uuid='" + uuid + '\'' +
+                ", gameCreator=" + gameCreator +
+                ", players=" + players +
+                ", activePlayer=" + activePlayer +
+                ", gameState=" + gameState +
+                ", deck=" + deck +
+                ", discard=" + discard +
+                ", playDirection='" + playDirection + '\'' +
+                '}';
     }
 }

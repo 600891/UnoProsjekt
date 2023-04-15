@@ -1,5 +1,7 @@
 package no.hvl.dat109.Uno.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.hvl.dat109.Uno.api.dto.*;
 import no.hvl.dat109.Uno.service.GameService;
 import no.hvl.dat109.Uno.service.MappingService;
@@ -44,11 +46,21 @@ public class GameRoomController {
         Principal user = getUserPrincipal(accessor);
         GameStateResponse response = mappingService.mapGameState(gameService.findGame(user.getName()));
 
+        String jsonSpillTilstand = (String) message.getPayload();
 
+        ObjectMapper objectMapper = new ObjectMapper();
 
+        try {
+            Game game = objectMapper.readValue(jsonSpillTilstand, Game.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
 
         messagingTemplate.convertAndSend(MESSAGE_CHANNEL, message.getPayload());
+
+
+
     }
 
     private Principal getUserPrincipal(SimpMessageHeaderAccessor accessor) {
