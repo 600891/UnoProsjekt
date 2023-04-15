@@ -27,18 +27,19 @@ public class LoginController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
-    public String logIn(@RequestParam String username, @RequestParam String pword, HttpServletRequest request, RedirectAttributes ra) {
+    public boolean logIn(@RequestParam String username, @RequestParam String pword, HttpServletRequest request, RedirectAttributes ra) {
 
         if (!username.equals("") && !pword.equals("")) { // Empty username or password
             ra.addFlashAttribute("redirectMessage", INVALID_USERNAME_MESSAGE);
-            return "redirect:" + LOGIN_URL;
+            return false;
         }
 
         //Conntecting to databse to check if info is correct
         User user = persistenceService.findUserByUsername(username);
 
         if (user == null) {
-            return "USER NOT FOUND";
+            // User not found in database
+            return false;
         }
 
         String savedHash = user.getPasswordHash();
@@ -46,11 +47,10 @@ public class LoginController {
         //String newHash = RegistrationUtil.hashPassword(pword);
 
 
-        if(!savedHash.equals(newHash)) {
-            return "WRONG PASSWORD";
-        }
+        //Checking if password is correct
+        return savedHash.equals(newHash);
 
-        return "LOGGED IN";
+
 
     }
 
