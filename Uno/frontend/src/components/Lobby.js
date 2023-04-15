@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, redirect, Navigate } from "react-router-dom";
 import GameSessionCard from "./GameSessionCard";
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 
 const Lobby = () => {
+  //Check if the user is logged in. //TODO Should implement a call to a controller to check if user is logged in
+  let isLoggedIn = localStorage.getItem("session");
   //states
   // to display current game rooms. Must be fetched from backend
   const [gameRooms, setGameRooms] = useState([]);
@@ -12,6 +14,7 @@ const Lobby = () => {
   const [activeRoom, setActiveRoom] = useState(() => {
     // getting stored value
     const saved = localStorage.getItem("activeRoom");
+
     const initialValue = saved;
     return initialValue || null;
   });
@@ -40,16 +43,19 @@ const Lobby = () => {
     fetchData();
     const socket = new SockJS(ENDPOINT + "/uno");
     const stompClient = Stomp.over(socket);
-    stompClient.connect({ username: location.state.username }, (frame) => {
-      console.log("Connected to the websocket server " + frame);
-      stompClient.subscribe("/user/topic/lobby", (message) =>
-        onMessageReceived(message)
-      );
-      stompClient.subscribe("/topic/lobby", (message) =>
-        onMessageReceived(message)
-      );
-      stompClient.send("/api/lobby", {}, {});
-    });
+    stompClient.connect(
+      { username: localStorage.getItem("username") },
+      (frame) => {
+        console.log("Connected to the websocket server " + frame);
+        stompClient.subscribe("/user/topic/lobby", (message) =>
+          onMessageReceived(message)
+        );
+        stompClient.subscribe("/topic/lobby", (message) =>
+          onMessageReceived(message)
+        );
+        stompClient.send("/api/lobby", {}, {});
+      }
+    );
     stompClientRef.current = stompClient;
   }, []);
 
@@ -208,6 +214,10 @@ const Lobby = () => {
       // Note - all neccessary states are saved in localStorage and can be retrieved in gameRoom
       navigate("/gameroom", { replace: true });
     }
+  }
+  // Will redirect the user to the log in page if not logged in
+  if (!isLoggedIn) {
+    return <Navigate to="/" />;
   }
 
   return (
