@@ -19,8 +19,6 @@ public class PersistenceService {
     private UserRepo userRepo;
     @Autowired
     private PlayerRepo playerRepo;
-    @Autowired
-    private UserRepo userRepo;
 
     public User findUserByUsername(String username) {
         // TODO implementer funksjonen mot basen og slett det som er under
@@ -33,11 +31,6 @@ public class PersistenceService {
         return userRepo.save(user);
     }
 
-    public User findUserByUsername(String username) {
-        User user = new User();
-        user.setUsername(username);
-        return user;
-    }
 
     public Player findPlayerByUsername(String username) {
         return playerRepo.findPlayerByUsername(username);
