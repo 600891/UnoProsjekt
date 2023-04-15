@@ -26,7 +26,8 @@ node_modules/
 /coverage
 
 # production
-/frontend/build
+Uno/frontend/build
+Uno/frontend/node
 
 # misc
 .DS_Store

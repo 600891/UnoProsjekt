@@ -21,7 +21,7 @@ function Login({ socket, stompClient }) {
   };
 
   async function getServerResponse() {
-    await fetch("http://localhost:8080/login", options)
+    await fetch("/login", options)
       .then((response) => response.text())
       .then((response) => {
         console.log("The response from loginController is: " + response);
@@ -40,7 +40,7 @@ function Login({ socket, stompClient }) {
   }, [loggedIn]);
   //Test. Not in use
   async function fetchData() {
-    fetch("http://localhost:8080/login")
+    fetch("/login")
       .then((response) => response.text()) // parse response as text
       .then((data) => {
         console.log(data); // log the response string to the console

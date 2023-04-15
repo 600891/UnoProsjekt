@@ -24,7 +24,6 @@ const GameRoom = () => {
   // **********
   // WEBSOCKET
   // **********
-  const ENDPOINT = "http://localhost:8080";
 
   // init stompClient from localStorage
   const stompClientRef = useRef(() => {
@@ -58,7 +57,7 @@ const GameRoom = () => {
   // Create and connect to socket
 
   useEffect(() => {
-    const socket = new SockJS(ENDPOINT + "/uno");
+    const socket = new SockJS("/uno");
     const stompClient = Stomp.over(socket);
     stompClient.connect({ username: localStorage.username }, (frame) => {
       console.log("Connected to the websocket server " + frame);

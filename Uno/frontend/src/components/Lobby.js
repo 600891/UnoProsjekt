@@ -25,7 +25,7 @@ const Lobby = () => {
   //**********
   // WEBSOCKETS
   //**********
-  const ENDPOINT = "http://localhost:8080";
+
   const stompClientRef = useRef(() => {
     const saved = localStorage.getItem("stompClient");
     const initialValue = JSON.parse(saved);
@@ -38,7 +38,7 @@ const Lobby = () => {
   // connect to websocket for lobby and subscribe to lobby rooms, then get list of lobbies
   useEffect(() => {
     fetchData();
-    const socket = new SockJS(ENDPOINT + "/uno");
+    const socket = new SockJS("/uno");
     const stompClient = Stomp.over(socket);
     stompClient.connect(
       { username: localStorage.getItem("username") },
