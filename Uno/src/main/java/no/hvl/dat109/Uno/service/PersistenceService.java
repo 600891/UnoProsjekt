@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service class.
- * @author Oda Bastesen Storebo
+ * @author Oda Bastesen Storebo, Aurora Sætran
  */
 @Service
 public class PersistenceService {
 
+    @Autowired
+    private UserRepo userRepo;
     @Autowired
     private PlayerRepo playerRepo;
     @Autowired
@@ -25,6 +27,16 @@ public class PersistenceService {
 
 
         return userRepo.findByUsername(username);
+    }
+
+    public User createUser(User user) {
+        return userRepo.save(user);
+    }
+
+    public User findUserByUsername(String username) {
+        User user = new User();
+        user.setUsername(username);
+        return user;
     }
 
     public Player findPlayerByUsername(String username) {
