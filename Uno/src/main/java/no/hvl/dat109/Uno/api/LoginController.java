@@ -45,7 +45,7 @@ public class LoginController {
         //String newHash = RegistrationUtil.hashPassword(pword);
 
 
-        // Dette er en helt unødvendig if, men for testing...
+        // Dette er en helt unødvendig if, men for testing....
         if (!username.equals(user.getUsername())) {
             return false;
         }
