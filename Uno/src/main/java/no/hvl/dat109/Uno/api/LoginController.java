@@ -1,43 +1,57 @@
 package no.hvl.dat109.Uno.api;
 
+import jakarta.servlet.http.HttpServletRequest;
+import no.hvl.dat109.Uno.persistence.entity.User;
 import no.hvl.dat109.Uno.service.PersistenceService;
+import no.hvl.dat109.Uno.utils.LoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-import java.util.Random;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 @RequestMapping("/login")
 public class LoginController {
 
-    private final PersistenceService persistenceService;
+
+    @Autowired
+    PersistenceService db;
 
     @Autowired
     public LoginController(PersistenceService persistenceService) {
-        this.persistenceService = persistenceService;
+        this.db = persistenceService;
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
-    public Boolean logIn( @RequestBody() Map<String, String> params) {
+    public boolean logIn(@RequestParam String username, @RequestParam String pword, HttpServletRequest request, RedirectAttributes ra) {
 
-        //TODO Her må det implementeres logikk for å sjekke om bruker med brukernavn og passord finnes i databasen
-        String username = params.get("username");
-        String password = params.get("password");
-        System.out.println("Username: " + username + " Password: " + password);
+        if (!username.equals("") && !pword.equals("")) { // Empty username or password
 
-        if(username.length() > 0){
-            // om bruker eksisterer returneres true. Bruker må også settes til innlogget på backendsiden.
-            // må ha en metode som kan kalles fra frontend for å sjekke om en gitt bruker er logget inn.
-            return true;
-        }else{
-
+            // Username or/and password field was emptry when posting
             return false;
         }
 
+        //Conntecting to databse to check if info is correct
+        User user = db.findUserByUsername(username);
 
+        if (user == null) {
+            // User not found in database
+            return false;
+        }
+
+        String savedHash = user.getPasswordHash();
+        String newHash = user.getPasswordHash();
+        //String newHash = RegistrationUtil.hashPassword(pword);
+
+        // Checking if password is correct, and loging in is so
+        if(!savedHash.equals(newHash)) {
+
+            return false;
+        }
+        LoginUtil.loginUser(request, user);
+        return true;
 
     }
+
 
 }

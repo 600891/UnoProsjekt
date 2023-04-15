@@ -20,7 +20,7 @@ public class MappingService {
 
     public GameResponse map(Game game) {
         List<String> playerNames = game.getPlayers().stream().map(Player::getName).toList();
-        return new GameResponse(game.getUuid(), game.getGameCreator().getName(), playerNames);
+        return new GameResponse(game.getGameId(), game.getGameCreator().getName(), playerNames);
     }
 
 }
