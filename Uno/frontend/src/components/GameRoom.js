@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import PlayerHand from "./PlayerHand";
 import DiscardPile from "./DiscardPile";
 import Deck from "./Deck";
@@ -9,6 +9,8 @@ import Stomp from "stompjs";
 import testData from "../data/testdata.json";
 
 const GameRoom = () => {
+  //Check if the user is logged in. //TODO Should implement a call to a controller to check if user is logged in
+  let isLoggedIn = localStorage.getItem("session");
   // Get data from mock JSON for testing
   const data = testData;
 
@@ -171,6 +173,12 @@ const GameRoom = () => {
     setMessage("");
   };
 
+  // Will redirect the user to the log in page if not logged in
+  if (!isLoggedIn) {
+    return <Navigate to="/" />;
+  }
+
+  //Will render the GameRoom if user is logged in
   return (
     <div className={`Game backgroundColorR backgroundColor${currentColor}`}>
       <div className="navBar">

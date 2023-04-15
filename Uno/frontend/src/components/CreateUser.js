@@ -1,23 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CreateUser() {
-  const [userName, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
+  const [loggedIn, setLogin] = useState(false);
   const navigate = useNavigate();
 
+  const params = {
+    username: username,
+    password: password,
+  };
+  const options = {
+    method: "POST",
+    body: JSON.stringify(params),
+    headers: { "Content-Type": "application/json" },
+  };
+
+  async function getServerResponse() {
+    await fetch("http://localhost:8080/login", options)
+      .then((response) => response.text())
+      .then((response) => {
+        console.log("The response from loginController is: " + response);
+        if (response === "true") setLogin(true);
+      });
+  }
+
+  useEffect(() => {
+    if (loggedIn) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("session", loggedIn);
+      navigate("/lobby", {
+        state: { username: username, password: password, session: loggedIn },
+      });
+    }
+  }, [loggedIn]);
+
   //code for logging creating a new user and logging the user in. Must implement log in logic
-  const login = () => {
+  const createNewUser = () => {
     console.log(
-      "Bruker trykket login med brukernavn:" +
-        userName +
-        " og passord: " +
+      "New user created with username: " +
+        username +
+        " and password: " +
         password
     );
 
-    navigate("/lobby", {
-      state: { userName: userName, password },
-    });
+    getServerResponse();
   };
 
   return (
@@ -34,7 +62,7 @@ function CreateUser() {
               </label>
               <input
                 className="input"
-                value={userName}
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
               ></input>
             </div>
@@ -50,7 +78,7 @@ function CreateUser() {
               ></input>
             </div>
           </div>
-          <button className="button" onClick={login}>
+          <button className="button" onClick={createNewUser}>
             Log in to this UNO-session
           </button>
         </div>
