@@ -1,11 +1,10 @@
 package no.hvl.dat109.Uno.api;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import no.hvl.dat109.Uno.persistence.entity.User;
 import no.hvl.dat109.Uno.service.PersistenceService;
+import no.hvl.dat109.Uno.utils.LoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -13,16 +12,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/login")
 public class LoginController {
 
-    private final PersistenceService persistenceService;
-    @Value("${}") private String INVALID_USERNAME_MESSAGE;
-    @Value("${}") private String LOGIN_URL;
 
     @Autowired
     PersistenceService db;
 
     @Autowired
     public LoginController(PersistenceService persistenceService) {
-        this.persistenceService = persistenceService;
+        this.db = persistenceService;
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -30,12 +26,13 @@ public class LoginController {
     public boolean logIn(@RequestParam String username, @RequestParam String pword, HttpServletRequest request, RedirectAttributes ra) {
 
         if (!username.equals("") && !pword.equals("")) { // Empty username or password
-            ra.addFlashAttribute("redirectMessage", INVALID_USERNAME_MESSAGE);
+
+            // Username or/and password field was emptry when posting
             return false;
         }
 
         //Conntecting to databse to check if info is correct
-        User user = persistenceService.findUserByUsername(username);
+        User user = db.findUserByUsername(username);
 
         if (user == null) {
             // User not found in database
@@ -46,11 +43,13 @@ public class LoginController {
         String newHash = user.getPasswordHash();
         //String newHash = RegistrationUtil.hashPassword(pword);
 
+        // Checking if password is correct, and loging in is so
+        if(!savedHash.equals(newHash)) {
 
-        //Checking if password is correct
-        return savedHash.equals(newHash);
-
-
+            return false;
+        }
+        LoginUtil.loginUser(request, user);
+        return true;
 
     }
 
