@@ -137,7 +137,7 @@ public class GameService {
                      game.setActivePlayer(creator);
             }
         }
-
+game.setPlayDirection("clockwise");
         // TODO persist
 
         return game;

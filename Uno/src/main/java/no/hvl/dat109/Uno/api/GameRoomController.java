@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.socket.WebSocketMessage;
 
 import java.security.Principal;
+import static no.hvl.dat109.Uno.enums.GameEvent.*;
 
 @Controller
 public class GameRoomController {
@@ -31,36 +32,29 @@ public class GameRoomController {
         this.mappingService = mappingService;
     }
 
-    @MessageMapping("/gameroom/{gameid}")
+    @MessageMapping("/gameroom/{gameid}/start")
     public void gameStart(SimpMessageHeaderAccessor accessor, @DestinationVariable String gameid) {
         Principal user = getUserPrincipal(accessor);
         System.out.println("Hi from gameStart, " + user.getName());
-        GameStateResponse response = mappingService.mapGameState(gameService.findStartedGameById(gameid));
-        System.out.println(response);
+        GameStateResponse gameState = mappingService.mapGameState(gameService.findStartedGameById(gameid));
+        GameEventResponse response = new GameEventResponse(gameState, START_GAME_EVENT);
         messagingTemplate.convertAndSendToUser(user.getName(), MESSAGE_CHANNEL + gameid, response);
     }
 
-    // @MessageMapping("/gamroom/{gameid}")
-    // public void gameState(SimpMessageHeaderAccessor accessor, @DestinationVariable String gameId, WebSocketMessage message) {
-    //     Principal user = getUserPrincipal(accessor);
-    //     GameStateResponse response = mappingService.mapGameState(gameService.findGame(user.getName()));
+     @MessageMapping("/gameroom/{gameid}")
+     public void gameState(SimpMessageHeaderAccessor accessor, @DestinationVariable String gameId, WebSocketMessage message) {
+         Principal user = getUserPrincipal(accessor);
+         GameStateResponse response = mappingService.mapGameState(gameService.findGame(user.getName()));
+         String jsonGameState = (String) message.getPayload();
+         ObjectMapper objectMapper = new ObjectMapper();
 
-    //     String jsonGameState = (String) message.getPayload();
-
-    //     ObjectMapper objectMapper = new ObjectMapper();
-
-    //     try {
-    //         Game game = objectMapper.readValue(jsonGameState, Game.class);
-    //     } catch (JsonProcessingException e) {
-    //         throw new RuntimeException(e);
-    //     }
-
-
-    //     messagingTemplate.convertAndSend(MESSAGE_CHANNEL, message.getPayload());
-
-
-
-    // }
+         try {
+             Game game = objectMapper.readValue(jsonGameState, Game.class);
+         } catch (JsonProcessingException e) {
+             throw new RuntimeException(e);
+         }
+         messagingTemplate.convertAndSend(MESSAGE_CHANNEL, message.getPayload());
+     }
 
     private Principal getUserPrincipal(SimpMessageHeaderAccessor accessor) {
         Principal user = accessor.getUser();

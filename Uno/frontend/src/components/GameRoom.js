@@ -73,7 +73,7 @@ const GameRoom = () => {
         onMessageReceived(message)
       );
       // send message to backend to receive initial game state
-      stompClient.send(`/api/gameroom/${gameID}`, {}, {});
+      stompClient.send(`/api/gameroom/${gameID}/start`, {}, {});
     });
     stompClientRef.current = stompClient;
   }, []);
@@ -86,9 +86,9 @@ const GameRoom = () => {
     // errorMessage-property
     if (messageObj.hasOwnProperty("errorMessage")) {
       console.log("Error Message: " + message);
-    } else {
+    } else if (messageObj.hasOwnProperty("event")) {
       // If not error message, it is a game state message
-      console.log("Game state message: " + messageObj);
+      setUpGame();
     }
   };
 
@@ -121,8 +121,10 @@ const GameRoom = () => {
   const [currentColor, setCurrentColor] = useState("");
   const [deck, setDeck] = useState("");
 
-  // Set up the game when you receive a start game message
-  const setUpGame = (message) => {};
+  // Set up the game when you receive a start game message, called from message handler
+  const setUpGame = (gamestateObject) => {
+    setGameState(gamestateObject);
+  };
 
   // Denne useEffecten skal kun hente info fra gameState! Henter man info fra andre ting kan det være det ikke blir lastet
   // Kan feks ikke sette currentColor fra currentTopCard, den må settes fra gameState.
