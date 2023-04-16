@@ -26,7 +26,6 @@ const GameRoom = () => {
   //**********
   // INIT FROM LOCALSTORAGE
   //**********
-
   const stompClientRef = useRef(() => {
     const saved = localStorage.getItem("stompClient");
     const initialValue = JSON.parse(saved);
@@ -50,6 +49,37 @@ const GameRoom = () => {
     const initialValue = saved;
     return initialValue || "";
   };
+
+  // **********
+  // GAME STATES
+  // **********
+
+  const [gameState, setGameState] = useState(null);
+
+  const [playDirection, setPlayDirection] = useState("");
+  const [playerTurn, setPlayerTurn] = useState("");
+  const [players, setPlayers] = useState([]);
+
+  // Aktiv spiller
+  const [yourPlayer, setYourPlayer] = useState(null);
+  const [yourPlayerHand, setYourPlayerHand] = useState(null);
+
+  // Motstandere
+  const [opponent1, setOpponent1] = useState(null);
+  const [opponent2, setOpponent2] = useState(null);
+  const [opponent3, setOpponent3] = useState(null);
+  const [opponent4, setOpponent4] = useState(null);
+  const [opponent5, setOpponent5] = useState(null);
+  const [opponent6, setOpponent6] = useState(null);
+  const [opponent7, setOpponent7] = useState(null);
+  const [opponent8, setOpponent8] = useState(null);
+  const [opponent9, setOpponent9] = useState(null);
+
+  // Bordet
+  const [currentTopCard, setCurrentTopCard] = useState("");
+  const [discardPile, setDiscardPile] = useState("");
+  const [currentColor, setCurrentColor] = useState("");
+  const [deck, setDeck] = useState("");
 
   // **********
   // WEBSOCKET
@@ -78,6 +108,12 @@ const GameRoom = () => {
     stompClientRef.current = stompClient;
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("stompClient", stompClientRef.current);
+  }, [stompClientRef]);
+
+  // Message handler
+  // IMPORTANT! This callback method can not read states, only update them. This includes functions called from here
   const onMessageReceived = (message) => {
     const messageObj = JSON.parse(message.body);
     console.log(messageObj);
@@ -87,103 +123,93 @@ const GameRoom = () => {
     if (messageObj.hasOwnProperty("errorMessage")) {
       console.log("Error Message: " + message);
     } else if (messageObj.hasOwnProperty("event")) {
-      // If not error message, it is a game state message
-      setUpGame();
+      // START_GAME_EVENT
+      const gameStateObj = messageObj.gameState;
+      console.log("Received start game message, setting up game...");
+      setUpGame(gameStateObj);
     }
   };
 
   // **********
   // GAME
   // **********
-  const [gameState, setGameState] = useState(null);
-
-  const [playDirection, setPlayDirection] = useState("");
-  const [playerTurn, setPlayerTurn] = useState("");
-
-  // Aktiv spiller
-  const [yourPlayer, setYourPlayer] = useState(null);
-  const [yourPlayerHand, setYourPlayerHand] = useState(null);
-
-  // Motstandere, finnes kanskje en bedre måte å gjøre dette på men for nå har vi en state per motstander (9 motstandere)
-  const [opponentOne, setOpponentOne] = useState(null);
-  const [opponentTwo, setOpponentTwo] = useState(null);
-  const [opponentThree, setOpponentThree] = useState(null);
-  const [opponentFour, setOpponentFour] = useState(null);
-  const [opponentFive, setOpponentFive] = useState(null);
-  const [opponentSix, setOpponentSix] = useState(null);
-  const [opponentSeven, setOpponentSeven] = useState(null);
-  const [opponentEight, setOpponentEight] = useState(null);
-  const [opponentNine, setOpponentNine] = useState(null);
-
-  // Bordet
-  const [currentTopCard, setCurrentTopCard] = useState("");
-  const [discardPile, setDiscardPile] = useState("");
-  const [currentColor, setCurrentColor] = useState("");
-  const [deck, setDeck] = useState("");
 
   // Set up the game when you receive a start game message, called from message handler
   const setUpGame = (gamestateObject) => {
-    setGameState(gamestateObject);
+    setPlayDirection(gamestateObject.playDirection);
+    const players = gamestateObject.players;
+    let id = 1;
+    players.forEach((player) => {
+      setPlayers([...players, player]);
+      // Check if this is your player
+      if (player.name === localStorage.getItem("username")) {
+        setYourPlayer(player);
+        setYourPlayerHand(player.hand);
+      } else {
+        switch (id) {
+          case 1:
+            setOpponent1(player);
+            break;
+          case 2:
+            setOpponent2(player);
+            break;
+          case 3:
+            setOpponent3(player);
+            break;
+          case 4:
+            setOpponent4(player);
+            break;
+          case 5:
+            setOpponent5(player);
+            break;
+          case 6:
+            setOpponent6(player);
+            break;
+          case 7:
+            setOpponent7(player);
+            break;
+          case 8:
+            setOpponent8(player);
+            break;
+          case 9:
+            setOpponent9(player);
+            break;
+          default:
+            break;
+        }
+
+        id++;
+      }
+      if (gamestateObject.playerTurn === player.name) {
+        setPlayerTurn(player);
+      }
+    });
+
+    setDeck(gamestateObject.deck);
+    setDiscardPile(gamestateObject.discard);
+    setCurrentTopCard(gamestateObject.discard.at(0));
+    setCurrentColor(gamestateObject.discard.at(0).cardColor);
   };
 
-  // Denne useEffecten skal kun hente info fra gameState! Henter man info fra andre ting kan det være det ikke blir lastet
-  // Kan feks ikke sette currentColor fra currentTopCard, den må settes fra gameState.
-  useEffect(() => {
-    if (gameState != null) {
-      setMessage(null); // Tilbakestill message hver gang man får oppdatering
-      console.log(gameState);
-
-      setGameID(gameState.gameID);
-      setPlayerTurn(gameState.playerTurn);
-      setPlayDirection(gameState.playDirection);
-
-      setYourPlayer(gameState.player1);
-      setYourPlayerHand(gameState.player1.hand);
-
-      setOpponentOne(gameState.player2);
-      setOpponentTwo(gameState.player3);
-      setOpponentThree(gameState.player4);
-      setOpponentFour(gameState.player5);
-      setOpponentFive(gameState.player6);
-      setOpponentSix(gameState.player7);
-      setOpponentSeven(gameState.player8);
-      setOpponentEight(gameState.player9);
-      setOpponentNine(gameState.player10);
-
-      setDeck(gameState.deck);
-      setCurrentTopCard(gameState.discard[0]);
-      setDiscardPile(gameState.discard);
-      setCurrentColor(gameState.discard[0].cardColor);
-    }
-  }, [gameState]);
-
   // Konstruer et nytt message-objekt ut fra klientens state etter at spilleren har gjort et trekk
-  const onTurnPlayedHandler = (e) => {
-    e.preventDefault();
-
+  const onTurnPlayedHandler = () => {
     // Rekkefølge: gameID, playerTurn, playDirection, player1-10, deck, discard
     // Checks if the message is empty and if the user is currently logged in
-    if (message.trim() && localStorage.getItem("userName")) {
-      stompClientRef.send("message", {
-        gameID: gameID,
-        playerTurn: playerTurn,
-        playDirection: playDirection,
-        player1: yourPlayer,
-        player2: opponentOne,
-        player3: opponentTwo,
-        player4: opponentThree,
-        player5: opponentFour,
-        player6: opponentFive,
-        player7: opponentSix,
-        player8: opponentSeven,
-        player9: opponentEight,
-        player10: opponentNine,
-        deck: deck,
-        discard: discardPile,
-      });
-    }
-
-    setMessage("");
+    stompClientRef.current.send(`api/gameroom/${gameID}`, {}, {});
+    stompClientRef.current.send(
+      `api/gameroom/${gameID}`,
+      {},
+      JSON.stringify({
+        gameState: {
+          gameID: gameID,
+          playerTurn: playerTurn.name,
+          playDirection: playDirection,
+          players,
+          deck: deck,
+          discard: discardPile,
+        },
+      })
+    );
   };
 
   // Will redirect the user to the log in page if not logged in
@@ -202,15 +228,15 @@ const GameRoom = () => {
       </div>
       <div className="gameTable">
         <div className="sideColumn opponentsLeft">
-          <Opponent opponent={opponentOne}></Opponent>
-          <Opponent opponent={opponentTwo}></Opponent>
-          <Opponent opponent={opponentThree}></Opponent>
+          <Opponent opponent={opponent1}></Opponent>
+          <Opponent opponent={opponent2}></Opponent>
+          <Opponent opponent={opponent3}></Opponent>
         </div>
         <div className="middleTable">
           <div className="flexRow opponentsTop" style={{ width: "70%" }}>
-            <Opponent opponent={opponentFour}></Opponent>
-            <Opponent opponent={opponentFive}></Opponent>
-            <Opponent opponent={opponentSix}></Opponent>
+            <Opponent opponent={opponent4}></Opponent>
+            <Opponent opponent={opponent5}></Opponent>
+            <Opponent opponent={opponent6}></Opponent>
           </div>
           <div className="flexRow" style={{ width: "40%" }}>
             <DiscardPile
@@ -240,9 +266,9 @@ const GameRoom = () => {
           ></PlayerHand>
         </div>
         <div className="sideColumn opponentsRight">
-          <Opponent opponent={opponentSeven}></Opponent>
-          <Opponent opponent={opponentEight}></Opponent>
-          <Opponent opponent={opponentNine}></Opponent>
+          <Opponent opponent={opponent7}></Opponent>
+          <Opponent opponent={opponent8}></Opponent>
+          <Opponent opponent={opponent9}></Opponent>
         </div>
       </div>
     </div>
