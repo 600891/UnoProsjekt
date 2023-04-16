@@ -40,7 +40,8 @@ public class MappingService {
         for(Card card: game.getDiscard().getDeck()){
             discard.add(mapCard(card));
         }
-        return new GameStateResponse(game.getUuid(), game.getActivePlayer().getName(), game.getPlayDirection(),players,deck,discard);
+        String playColor = game.getDiscard().getDeck().get(0).getColor().toString().toLowerCase();
+        return new GameStateResponse(game.getUuid(), game.getActivePlayer().getName(), game.getPlayDirection(), playColor, players,deck,discard);
     }
 
     public PlayerResponse mapPlayer(Player player){

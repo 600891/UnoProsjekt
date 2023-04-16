@@ -4,16 +4,19 @@ import GameRoom from "./GameRoom";
 import {
   chooseColor,
   drawCards,
+  findMyPlayer,
   findNextPlayer,
   isColorLegal,
   isValueLegal,
   reverseDirection,
   skipPlayer,
+  updateOwnHand,
 } from "../utils/GameRules";
 import _ from "lodash";
 
 const PlayerHand = ({
   players,
+  setPlayers,
   player,
   deck,
   discard,
@@ -34,7 +37,7 @@ const PlayerHand = ({
     if (
       (isColorLegal(currentColor, played_card) ||
         isValueLegal(currentCard, played_card)) &&
-      playerTurn === player
+      playerTurn === player.name
     ) {
       // Handle special card logic in switch state
       switch (played_card.cardValue) {
@@ -51,15 +54,21 @@ const PlayerHand = ({
           console.log("Regular card played.");
           if (played_card.cardColor === "black") {
             setCurrentColor(chooseColor());
-            setCurrentCard(played_card);
           } else {
             setCurrentColor(played_card.cardColor);
-            setCurrentCard(played_card);
           }
+          setCurrentCard(played_card);
+          setPlayerTurn(findNextPlayer(players, player, direction));
           break;
         case "reverse":
           console.log("Reverse card played " + direction);
-          reverseDirection(direction, setDirection);
+          reverseDirection(
+            direction,
+            setDirection,
+            player,
+            players,
+            setPlayerTurn
+          );
           break;
         case "skip":
           console.log("Skip card played");
@@ -72,14 +81,19 @@ const PlayerHand = ({
             console.log("Draw 4 played");
             setCurrentColor(chooseColor());
             setCurrentCard(played_card);
-            drawCards(players, 4, player, deck, direction);
+            setPlayerTurn(drawCards(players, 4, player, deck, direction));
           } else {
             console.log("Draw 2 played");
             setCurrentColor(played_card.cardColor);
             setCurrentCard(played_card);
-            drawCards(players, 2, player, deck, direction);
+            setPlayerTurn(drawCards(players, 2, player, deck, direction));
           }
 
+          break;
+        case "wild":
+          setCurrentColor(chooseColor());
+          setCurrentCard(played_card);
+          setPlayerTurn(findNextPlayer(players, player, direction));
           break;
         default:
           console.log("Something went wrong");
@@ -88,10 +102,9 @@ const PlayerHand = ({
       let newHand = hand.filter(
         (card) => !_.isEqual(card.cardId, played_card.cardId)
       );
-      turnPlayed = true;
       setDiscard([played_card, ...discard]);
-      setPlayerTurn(findNextPlayer(players, player, direction));
-      changeHand(newHand);
+      updateOwnHand(players, setPlayers, player, newHand);
+      turnPlayed(true);
     }
   };
 

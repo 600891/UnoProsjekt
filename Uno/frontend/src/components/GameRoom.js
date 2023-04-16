@@ -58,6 +58,7 @@ const GameRoom = () => {
 
   const [playDirection, setPlayDirection] = useState("");
   const [playerTurn, setPlayerTurn] = useState("");
+  const [turnPlayed, setTurnPlayed] = useState(false);
   const [players, setPlayers] = useState([]);
 
   // Aktiv spiller
@@ -123,7 +124,7 @@ const GameRoom = () => {
     if (messageObj.hasOwnProperty("errorMessage")) {
       console.log("Error Message: " + message);
     } else {
-      // START_GAME_EVENT
+      // Game update message
       const gameStateObj = messageObj.gameState;
       updateGame(gameStateObj);
     }
@@ -133,10 +134,10 @@ const GameRoom = () => {
   // GAME
   // **********
 
-  let turnPlayed;
   // Update the game state when you receive a start game message or update message, called from message handler
   const updateGame = (gamestateObject) => {
     setPlayDirection(gamestateObject.playDirection);
+    setCurrentColor(gamestateObject.playColor);
     const statePlayers = gamestateObject.players;
     let id = 1;
     setPlayers(statePlayers);
@@ -181,41 +182,41 @@ const GameRoom = () => {
         id++;
       }
       if (gamestateObject.playerTurn === player.name) {
-        setPlayerTurn(player);
+        setPlayerTurn(player.name);
       }
     });
 
     setDeck(gamestateObject.deck);
     setDiscardPile(gamestateObject.discard);
     setCurrentTopCard(gamestateObject.discard.at(0));
-    setCurrentColor(gamestateObject.discard.at(0).cardColor);
   };
 
   useEffect(() => {
     if (turnPlayed === true) {
-      setGameState(
-        JSON.stringify({
-          gameState: {
-            gameID: gameID,
-            playerTurn: playerTurn.name,
-            playDirection: playDirection,
-            players,
-            deck: deck,
-            discard: discardPile,
-          },
-        })
-      );
-      console.log("Game state changed");
       onTurnPlayedHandler();
-      turnPlayed = false;
+      setTurnPlayed(false);
     }
-  }, [yourPlayerHand]);
+  }, [turnPlayed]);
 
   // Konstruer et nytt message-objekt ut fra klientens state etter at spilleren har gjort et trekk
   const onTurnPlayedHandler = () => {
     // Rekkefølge: gameID, playerTurn, playDirection, player1-10, deck, discard
     // Checks if the message is empty and if the user is currently logged in
-    stompClientRef.current.send(`/api/gameroom/${gameID}`, {}, gameState);
+    stompClientRef.current.send(
+      `/api/gameroom/${gameID}`,
+      {},
+      JSON.stringify({
+        gameState: {
+          gameID: gameID,
+          playerTurn: playerTurn,
+          playDirection: playDirection,
+          playColor: currentColor,
+          players,
+          deck: deck,
+          discard: discardPile,
+        },
+      })
+    );
   };
 
   // Will redirect the user to the log in page if not logged in
@@ -263,6 +264,7 @@ const GameRoom = () => {
           </div>
           <PlayerHand
             players={players}
+            setPlayers={setPlayers}
             player={yourPlayer}
             hand={yourPlayerHand}
             deck={deck}
@@ -277,7 +279,7 @@ const GameRoom = () => {
             setDirection={setPlayDirection}
             playerTurn={playerTurn}
             setPlayerTurn={setPlayerTurn}
-            turnPlayed={turnPlayed}
+            turnPlayed={setTurnPlayed}
           ></PlayerHand>
         </div>
         <div className="sideColumn opponentsRight">

@@ -6,6 +6,7 @@ public record GameStateResponse(
         String gameID,
         String playerTurn,
         String playDirection,
+        String playColor,
         List<PlayerResponse> players,
         List<CardResponse> deck,
         List<CardResponse> discard

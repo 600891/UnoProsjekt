@@ -33,11 +33,19 @@ export function isValueLegal(currentCard, played_card) {
 }
 
 // Set new play direction opposite of the current direction
-export function reverseDirection(direction, setDirection) {
+export function reverseDirection(
+  direction,
+  setDirection,
+  player,
+  players,
+  setPlayerTurn
+) {
   if (direction === "clockwise") {
     setDirection("counterclockwise");
+    setPlayerTurn(findNextPlayer(players, player, "counterclockwise"));
   } else {
     setDirection("clockwise");
+    setPlayerTurn(findNextPlayer(players, player, "clockwise"));
   }
 }
 
@@ -78,10 +86,11 @@ export function skipPlayer(players, yourPlayer, setPlayerTurn, direction) {
 
 export function drawCards(players, amount, yourPlayer, deck, direction) {
   // Find which player should draw cards
+  let player;
   for (let i = 0; i < players.length; i++) {
     if (players.at(i) === yourPlayer) {
       // Add two cards from deck to next players hand
-      let player;
+
       if (direction === "clockwise") {
         player = players.at((i + 1) % players.length);
       } else {
@@ -92,6 +101,24 @@ export function drawCards(players, amount, yourPlayer, deck, direction) {
       }
     }
   }
+  return player.name;
+}
+
+export function updateOwnHand(players, setPlayers, yourPlayer, newHand) {
+  let player;
+  let newPlayers = [];
+  for (let i = 0; i < players.length; i++) {
+    if (players.at(i) === yourPlayer) {
+      player = players.at(i);
+      player.hand = newHand;
+      newPlayers.push(player);
+    } else {
+      newPlayers.push(players.at(i));
+    }
+  }
+  console.log("new Players after update hand");
+  console.log(newPlayers);
+  setPlayers(newPlayers);
 }
 
 export function findNextPlayer(players, yourPlayer, direction) {
