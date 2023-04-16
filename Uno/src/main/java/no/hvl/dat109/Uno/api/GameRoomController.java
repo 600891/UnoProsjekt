@@ -35,16 +35,8 @@ public class GameRoomController {
         Principal user = getUserPrincipal(accessor);
         System.out.println("Message received in gameState.");
         System.out.println(payload);
-        //  GameStateResponse response = mappingService.mapGameState(gameService.findGame(user.getName()));
-        //  String jsonGameState = (String) message.getPayload();
-        //  ObjectMapper objectMapper = new ObjectMapper();
-
-        //  try {
-        //      Game game = objectMapper.readValue(jsonGameState, Game.class);
-        //  } catch (JsonProcessingException e) {
-        //      throw new RuntimeException(e);
-        //  }
-        messagingTemplate.convertAndSend(MESSAGE_CHANNEL, "Message received");
+        // Send this gamestate out to every player
+        messagingTemplate.convertAndSend( MESSAGE_CHANNEL + gameid, payload);
      }
 
     @MessageMapping("/gameroom/{gameid}/start")

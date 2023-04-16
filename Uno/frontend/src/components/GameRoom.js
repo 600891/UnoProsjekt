@@ -122,11 +122,10 @@ const GameRoom = () => {
     // errorMessage-property
     if (messageObj.hasOwnProperty("errorMessage")) {
       console.log("Error Message: " + message);
-    } else if (messageObj.hasOwnProperty("event")) {
+    } else {
       // START_GAME_EVENT
       const gameStateObj = messageObj.gameState;
-      console.log("Received start game message, setting up game...");
-      setUpGame(gameStateObj);
+      updateGame(gameStateObj);
     }
   };
 
@@ -134,13 +133,14 @@ const GameRoom = () => {
   // GAME
   // **********
 
-  // Set up the game when you receive a start game message, called from message handler
-  const setUpGame = (gamestateObject) => {
+  let turnPlayed;
+  // Update the game state when you receive a start game message or update message, called from message handler
+  const updateGame = (gamestateObject) => {
     setPlayDirection(gamestateObject.playDirection);
-    const players = gamestateObject.players;
+    const statePlayers = gamestateObject.players;
     let id = 1;
-    players.forEach((player) => {
-      setPlayers([...players, player]);
+    setPlayers(statePlayers);
+    statePlayers.forEach((player) => {
       // Check if this is your player
       if (player.name === localStorage.getItem("username")) {
         setYourPlayer(player);
@@ -191,29 +191,38 @@ const GameRoom = () => {
     setCurrentColor(gamestateObject.discard.at(0).cardColor);
   };
 
+  useEffect(() => {
+    if (turnPlayed === true) {
+      setGameState(
+        JSON.stringify({
+          gameState: {
+            gameID: gameID,
+            playerTurn: playerTurn.name,
+            playDirection: playDirection,
+            players,
+            deck: deck,
+            discard: discardPile,
+          },
+        })
+      );
+      console.log("Game state changed");
+      onTurnPlayedHandler();
+      turnPlayed = false;
+    }
+  }, [yourPlayerHand]);
+
   // Konstruer et nytt message-objekt ut fra klientens state etter at spilleren har gjort et trekk
   const onTurnPlayedHandler = () => {
     // Rekkefølge: gameID, playerTurn, playDirection, player1-10, deck, discard
     // Checks if the message is empty and if the user is currently logged in
-    stompClientRef.current.send(`api/gameroom/${gameID}`, {}, {});
-    stompClientRef.current.send(
-      `api/gameroom/${gameID}`,
-      {},
-      JSON.stringify({
-        gameState: {
-          gameID: gameID,
-          playerTurn: playerTurn.name,
-          playDirection: playDirection,
-          players,
-          deck: deck,
-          discard: discardPile,
-        },
-      })
-    );
+    stompClientRef.current.send(`/api/gameroom/${gameID}`, {}, gameState);
   };
 
   // Will redirect the user to the log in page if not logged in
   if (!isLoggedIn) {
+    stompClientRef.current.disconnect(() => {
+      console.log("User disconnected");
+    });
     return <Navigate to="/" />;
   }
 
@@ -228,9 +237,9 @@ const GameRoom = () => {
       </div>
       <div className="gameTable">
         <div className="sideColumn opponentsLeft">
-          <Opponent opponent={opponent1}></Opponent>
-          <Opponent opponent={opponent2}></Opponent>
           <Opponent opponent={opponent3}></Opponent>
+          <Opponent opponent={opponent2}></Opponent>
+          <Opponent opponent={opponent1}></Opponent>
         </div>
         <div className="middleTable">
           <div className="flexRow opponentsTop" style={{ width: "70%" }}>
@@ -253,8 +262,12 @@ const GameRoom = () => {
             ></Deck>
           </div>
           <PlayerHand
+            players={players}
             player={yourPlayer}
             hand={yourPlayerHand}
+            deck={deck}
+            discard={discardPile}
+            setDiscard={setDiscardPile}
             changeHand={setYourPlayerHand}
             currentCard={currentTopCard}
             setCurrentCard={setCurrentTopCard}
@@ -262,7 +275,9 @@ const GameRoom = () => {
             setCurrentColor={setCurrentColor}
             direction={playDirection}
             setDirection={setPlayDirection}
-            turnHandler={onTurnPlayedHandler}
+            playerTurn={playerTurn}
+            setPlayerTurn={setPlayerTurn}
+            turnPlayed={turnPlayed}
           ></PlayerHand>
         </div>
         <div className="sideColumn opponentsRight">
