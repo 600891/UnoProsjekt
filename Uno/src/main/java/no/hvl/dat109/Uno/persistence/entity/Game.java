@@ -2,82 +2,33 @@ package no.hvl.dat109.Uno.persistence.entity;
 
 import jakarta.persistence.*;
 import no.hvl.dat109.Uno.enums.GameStateEnum;
+import no.hvl.dat109.Uno.service.model.CardCollection;
 
 import java.util.List;
 @Entity
 @Table(name = "game", schema = "uno")
 public class Game {
 
-    private Player gameCreator;
+    //@Id
+    //@Column(name = "game_id")
+    private String uuid;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "game_id")
-    private Long gameId;
-    //@OneToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "playerId")
-    //private Player player;
-
-    @Column(name="player_one")
-    private Long playerOne;
-
-    @Column(name="player_two")
-    private Long playerTwo;
-
-    @Column(name="player_three")
-    private Long playerThree;
-
-    @Column(name="player_four")
-    private Long playerFour;
-    @Column(name="player_five")
-    private Long playerFive;
-    @Column(name="player_six")
-    private Long playerSix;
-    @Column(name = "player_seven")
-    private Long playerSeven;
-    @Column(name = "player_eight")
-    private Long playerEight;
-    @Column(name = "player_nine")
-    private Long playerNine;
-    @Column(name = "player_ten")
-    private Long playerTen;
-
-    @ElementCollection
-    @Column (name = "deck", columnDefinition = "TEXT", nullable = false)
-    private List<Card> deck;
-
-
-
-
-
-
-
-
-    @OneToOne
-    @JoinColumn(name = "player", nullable = false)
-    public Player getGameCreator() {
-        return gameCreator;
-    }
-
-    public void setAddress(Player player) {
-        this.player = player;
-    }
-
-
-
-
-
-
-    @OneToMany
-    @Column(name = "players")
-    private List<Player> players;
-    @Column(name = "active_player")
+    //@Column(name = "active_player")
     private Player activePlayer;
-    @Column(name = "game_state")
+
+    //@Column(name = "game_state")
     private GameStateEnum gameState;
 
-    public Long getGameId() {
-        return gameId;
+    private CardCollection deck;
+    private CardCollection discard;
+    private String playDirection;
+
+    public Game() {}
+
+
+    public String getUuid() {
+        return uuid;
+
     }
 
     public void setGameId(Long gameId) {
@@ -116,9 +67,43 @@ public class Game {
         this.gameState = gameState;
     }
 
-    @OneToOne (mappedBy = "Game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Player player;
+    public CardCollection getDeck() {
+        return deck;
+    }
+
+    public void setDeck(CardCollection deck) {
+        this.deck = deck;
+    }
+
+    public CardCollection getDiscard() {
+        return discard;
+    }
+
+    public void setDiscard(CardCollection discard) {
+        this.discard = discard;
+    }
+
+    public String getPlayDirection() {
+        return playDirection;
+    }
+
+    public void setPlayDirection(String playDirection) {
+        this.playDirection = playDirection;
+    }
 
 
 
+    @Override
+    public String toString() {
+        return "Game{" +
+                "uuid='" + uuid + '\'' +
+                ", gameCreator=" + gameCreator +
+                ", players=" + players +
+                ", activePlayer=" + activePlayer +
+                ", gameState=" + gameState +
+                ", deck=" + deck +
+                ", discard=" + discard +
+                ", playDirection='" + playDirection + '\'' +
+                '}';
+    }
 }

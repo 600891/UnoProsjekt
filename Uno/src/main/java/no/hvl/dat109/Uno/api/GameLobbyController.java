@@ -81,7 +81,7 @@ public class GameLobbyController {
     }
 
     @MessageMapping("/lobby/game/start/{gameId}")
-    public void startGame(SimpMessageHeaderAccessor accessor) {
+    public void startGame(SimpMessageHeaderAccessor accessor, @DestinationVariable String gameId) {
         Principal user = getUserPrincipal(accessor);
         Game game = gameService.startGame(user.getName());
         if(game == null) {
@@ -91,6 +91,7 @@ public class GameLobbyController {
             return;
         }
         LobbyEventResponse response = new LobbyEventResponse(game.getUuid(), user.getName(), START_GAME_EVENT);
+        System.out.println("Starting game with ID " + game.getUuid());
         messagingTemplate.convertAndSend(MESSAGE_CHANNEL, response);
     }
 

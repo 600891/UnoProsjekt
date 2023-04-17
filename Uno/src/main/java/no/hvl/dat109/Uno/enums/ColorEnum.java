@@ -20,5 +20,10 @@ public enum ColorEnum {
     /**
      * Yellow color
      */
-    YELLOW
+    YELLOW,
+
+    /**
+     * Wild color
+     */
+    BLACK
 }
