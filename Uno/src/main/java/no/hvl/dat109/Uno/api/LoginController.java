@@ -34,12 +34,11 @@ public class LoginController {
         //Conntecting to databse to check if info is correct
         User user = db.findUserByUsername(username);
 
-        System.out.println("Username: " + user.getUsername() + " Password: " + user.getPasswordHash());
-
         if (user == null) {
             // User not found in database
             return false;
         }
+        System.out.println("Username: " + user.getUsername() + " Password: " + user.getPasswordHash());
 
         String savedHash = user.getPasswordHash();
         //String newHash = RegistrationUtil.hashPassword(pword);
