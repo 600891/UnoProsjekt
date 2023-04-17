@@ -8,13 +8,16 @@ Nora Kristiansen, Siri Kaarvik Slyk, Elina Tang Wa, Oda Bastesen Storebø, Auror
 ## Om prosjektet
 
 Prosjektet er utviklet i React, Java med Spring Boot, og PostgreSQL.
+
 Innlogging og registrering benytter seg av REST API.
+
 Lobby og spillrom kommuniserer over Websockets med STOMP-protokoll.
 
 ## Kjøre prosjektet
 
-Frontend-prosjektet ligger i Uno/frontend, kjør `npm start` fra denne mappen for å starte React-prosjektet på localhost:3000
-Backend-prosjektet ligger i Uno/src, kjør **UnoApplication.java** for å starte backend på localhost:8080
+Frontend-prosjektet ligger i Uno/frontend, kjør `npm start` fra denne mappen for å starte React-prosjektet på localhost:3000.
+
+Backend-prosjektet ligger i Uno/src, kjør **UnoApplication.java** for å starte backend på localhost:8080.
 
 Prosjektet benytter seg av Local Storage, så når man skal teste flere brukere må man benytte forskjellige nettlesere eller privat modus.
 
