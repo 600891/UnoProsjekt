@@ -51,9 +51,9 @@ public class GameService {
         game.setUuid(gameId);
         game.setPlayers(players);
         game.setGameCreator(player);
-
+        game.setGameState(GameStateEnum.NOT_STARTED);
         notStartedGames.add(game);
-        persistenceService.saveGame(game);
+        //persistenceService.saveGame(game);
 
         return game;
     }
@@ -73,7 +73,7 @@ public class GameService {
         Player player = persistenceService.findPlayerByUsername(username);
         game.getPlayers().add(player);
 
-        persistenceService.saveGame(game);
+        //persistenceService.saveGame(game);
 
         return game;
     }
@@ -127,13 +127,7 @@ public class GameService {
         // Sett spillets discard pile
         game.setDiscard(discard);
         // Sette currentPlayer til den som lagde spillet
-        Player creator;
-        for(Player player : game.getPlayers()){
-            if(player.getName() == username)    {
-                     creator = player;
-                     game.setActivePlayer(creator);
-            }
-        }
+        game.setActivePlayer(game.getGameCreator());
         game.setPlayDirection("clockwise");
         // TODO persist
 

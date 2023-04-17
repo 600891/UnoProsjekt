@@ -3,6 +3,7 @@ package no.hvl.dat109.Uno.persistence.entity;
 import no.hvl.dat109.Uno.enums.GameStateEnum;
 import no.hvl.dat109.Uno.service.model.CardCollection;
 
+import java.util.ArrayList;
 import java.util.List;
 //@Entity
 //@Table(name = "game", schema = "uno")
@@ -25,13 +26,13 @@ public class Game {
 
     //@ElementCollection
     //@Column (name = "Deck", columnDefinition = "TEXT", nullable = false)
-    private List<Card> databaseDeck = deck.getDeck();
+    private List<Card> databaseDeck = new ArrayList<Card>();
 
     private CardCollection discard;
 
     //@ElementCollection
     //@Column (name = "Discardpile", columnDefinition = "TEXT", nullable = false)
-    private List<Card> databaseDiscardpile = discard.getDeck();
+    private List<Card> databaseDiscardpile = new ArrayList<Card>();
     private String playDirection;
 
     public Game() {}

@@ -36,6 +36,9 @@ public class CardCollection{
     }
 
     public List<Card> getDeck() {
+        if(deck.isEmpty()){
+            return new ArrayList();
+        }
         return deck;
     }
 
