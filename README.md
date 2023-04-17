@@ -26,10 +26,23 @@ Registrering ble desverre ikke ferdig, så det er lagt inn test-brukere man kan 
 
 ## Starte et Uno-spill
 
-![login](./UnoBilder/login.png)
-![lobby 1](./UnoBilder/lobby1.png)
-![lobby 2](./UnoBilder/lobby2.png)
-![lobby 3](./UnoBilder/lobby3.png)
-![lobby 4](./UnoBilder/lobby4.png)
-![gameroom 1](./UnoBilder/gameroom1.png)
-![gameroom 2](./UnoBilder/gameroom2.png)
+Logg inn med to av testbrukerne fra tabellen over, i hver sine nettlesere
+![login](./Uno/UnoBilder/login.png)
+
+Du er nå i lobbyen. Trykk Create new game session på en av brukerne
+![lobby 1](./Uno/UnoBilder/lobby1.png)
+
+Spillet er nå opprettet, og man kan se hvor mange spillere som er med. Spillet kan ikke startes før det er minst to spillere med.
+![lobby 2](./Uno/UnoBilder/lobby2.png)
+
+Bli med i spillet med den andre brukeren.
+![lobby 3](./Uno/UnoBilder/lobby3.png)
+
+Start spillet fra brukeren som opprettet spillet.
+![lobby 4](./Uno/UnoBilder/lobby4.png)
+
+Du befinner deg nå i spillrommet på begge brukerne. Spilleren som opprettet spillet starter.
+![gameroom 1](./Uno/UnoBilder/gameroom1.png)
+
+Spilte kort vises hos alle brukere.
+![gameroom 2](./Uno/UnoBilder/gameroom2.png)
