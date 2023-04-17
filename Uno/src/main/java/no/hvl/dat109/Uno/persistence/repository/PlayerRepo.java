@@ -3,6 +3,8 @@ package no.hvl.dat109.Uno.persistence.repository;
 import no.hvl.dat109.Uno.persistence.entity.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * JPA repository.
  * @author Siri Slyk
@@ -10,4 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface PlayerRepo extends JpaRepository<Player, Integer> {
 
+    Player findPlayerByUsername(String username);
 }

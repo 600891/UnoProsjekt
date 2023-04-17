@@ -13,16 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
-
-import static no.hvl.dat109.Uno.enums.GameStateEnum.NOT_STARTED;
 
 @Service
 public class GameService {
 
-    private final List<Game> notStartedGames;
-    private final List<Game> startedGames;
+    private List<Game> notStartedGames;
+    private List<Game> startedGames;
     private final PersistenceService persistenceService;
 
     @Autowired
@@ -38,7 +36,8 @@ public class GameService {
      * @return the game created, null if no game created
      */
     public Game createGame(String username) {
-        String gameId = UUID.randomUUID().toString();
+        Long gameId = new Random().nextLong();
+       // String gameId = UUID.randomUUID().toString();
 
         Player player = persistenceService.findPlayerByUsername(username);
 
@@ -50,10 +49,9 @@ public class GameService {
         players.add(player);
 
         Game game = new Game();
-        game.setUuid(gameId);
+        game.setGameId(gameId);
         game.setPlayers(players);
         game.setGameCreator(player);
-        game.setGameState(NOT_STARTED);
 
         notStartedGames.add(game);
         persistenceService.saveGame(game);
@@ -68,8 +66,8 @@ public class GameService {
      * @return the game that is joined, null if the game is full or non-existing
      */
     public Game joinGame(String username, String gameId) {
-        Game game = findNotStartedGameById(gameId);
-        if(game == null || isGameFull(game) || isPartOfGame(username) || game.getGameState() != NOT_STARTED) {
+        Game game = notStartedGames.stream().filter(g -> g.getGameId().equals(gameId)).findFirst().orElse(null);
+        if(game == null || isGameFull(game)) {
             return null;
         }
 
@@ -81,36 +79,13 @@ public class GameService {
         return game;
     }
 
-    /**
-     * this function helps the given player to leave the game he is in, either started or not
-     * @param username the username of the player that is about to leave
-     * @return the game that the player has left successfully, null otherwise
-     */
-    public Game leaveNotStartedGame(String username) {
-        Game game = findGame(username);
-        if(game == null || game.getGameState() != NOT_STARTED) {
-            return null;
-        }
-
-        game.getPlayers().removeIf(p -> p.getName().equals(username));
-        if(game.getPlayers().isEmpty()) {
-            notStartedGames.remove(game);
-        }
-
-        // todo: persistence
-
-        return game;
-    }
-
-    /**
-     * this function starts the game which the player has joined
-     * @param username the player that wants to start the game
-     * @return the game started, null if: non-existing, already started, finished, not enough players
-     */
-    public Game startGame(String username) {
-        Game game = findGame(username);
-        if(game == null || game.getGameState() != NOT_STARTED || game.getPlayers().size() < 2) {
-            return null;
+    private boolean isPartOfGame(String username) {
+        for(Game game : notStartedGames) {
+            for(Player player : game.getPlayers()) {
+                if(player.getName().equals(username)) {
+                    return true;
+                }
+            }
         }
 
         notStartedGames.remove(game);
@@ -184,11 +159,11 @@ game.setPlayDirection("clockwise");
         for(Game game : games) {
             for(Player player : game.getPlayers()) {
                 if(player.getName().equals(username)) {
-                    return game;
+                    return true;
                 }
             }
         }
-        return null;
+        return false;
     }
 
     public List<Game> getAllNotStartedGames() {
@@ -196,10 +171,8 @@ game.setPlayDirection("clockwise");
     }
 
     public boolean isGameFull(Game game) {
-        return game.getPlayers().size() >= 10;
+        return game.getPlayers().size() >= 4;
     }
-
-    // region {other code}
 
     public List<Player> createPlayers(int numOfPlayers, List<String> names) {
         List<Player> players = new ArrayList<>();
@@ -281,7 +254,5 @@ game.setPlayDirection("clockwise");
     public boolean checkWin(Player player) {
         return player.getHand().size() == ConstantUtil.NUM_FOR_WIN;
     }
-
-    //endregion
 
 }

@@ -1,23 +1,17 @@
 package no.hvl.dat109.Uno.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import no.hvl.dat109.Uno.enums.GameStateEnum;
 import no.hvl.dat109.Uno.service.model.CardCollection;
 
 import java.util.List;
-//@Entity
+@Entity
+@Table(name = "game", schema = "uno")
 public class Game {
 
     //@Id
     //@Column(name = "game_id")
     private String uuid;
-
-    private Player gameCreator;
-
-    //@Column(name = "players")
-    //@OneToMany
-    private List<Player> players;
 
     //@Column(name = "active_player")
     private Player activePlayer;
@@ -34,15 +28,16 @@ public class Game {
 
     public String getUuid() {
         return uuid;
+
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
     }
 
-    public Player getGameCreator() {
+    /*public Player getGameCreator() {
         return gameCreator;
-    }
+    }*/
 
     public void setGameCreator(Player gameCreator) {
         this.gameCreator = gameCreator;
