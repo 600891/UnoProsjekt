@@ -19,7 +19,7 @@ Frontend-prosjektet ligger i Uno/frontend, kjør `npm start` fra denne mappen fo
 
 Backend-prosjektet ligger i Uno/src, kjør **UnoApplication.java** for å starte backend på localhost:8080.
 
-Prosjektet benytter seg av Local Storage, så når man skal teste flere brukere må man benytte forskjellige nettlesere eller privat modus.
+Prosjektet benytter seg av Local Storage, så når man skal teste flere brukere må man benytte forskjellige nettlesere eller privat modus. (PS! Prosjektet fungerer ikke i Brave)
 
 ---
 
