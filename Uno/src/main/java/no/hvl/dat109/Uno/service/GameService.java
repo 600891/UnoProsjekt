@@ -36,8 +36,7 @@ public class GameService {
      * @return the game created, null if no game created
      */
     public Game createGame(String username) {
-        Long gameId = new Random().nextLong();
-       // String gameId = UUID.randomUUID().toString();
+       String gameId = UUID.randomUUID().toString();
 
         Player player = persistenceService.findPlayerByUsername(username);
 
@@ -49,7 +48,7 @@ public class GameService {
         players.add(player);
 
         Game game = new Game();
-        game.setGameId(gameId);
+        game.setUuid(gameId);
         game.setPlayers(players);
         game.setGameCreator(player);
 
@@ -66,7 +65,7 @@ public class GameService {
      * @return the game that is joined, null if the game is full or non-existing
      */
     public Game joinGame(String username, String gameId) {
-        Game game = notStartedGames.stream().filter(g -> g.getGameId().equals(gameId)).findFirst().orElse(null);
+        Game game = notStartedGames.stream().filter(g -> g.getUuid().equals(gameId)).findFirst().orElse(null);
         if(game == null || isGameFull(game)) {
             return null;
         }
@@ -79,13 +78,36 @@ public class GameService {
         return game;
     }
 
-    private boolean isPartOfGame(String username) {
-        for(Game game : notStartedGames) {
-            for(Player player : game.getPlayers()) {
-                if(player.getName().equals(username)) {
-                    return true;
-                }
-            }
+        /**
+     * this function helps the given player to leave the game he is in, either started or not
+     * @param username the username of the player that is about to leave
+     * @return the game that the player has left successfully, null otherwise
+     */
+    public Game leaveNotStartedGame(String username) {
+        Game game = findGame(username);
+        if(game == null || game.getGameState() != GameStateEnum.NOT_STARTED) {
+            return null;
+        }
+
+        game.getPlayers().removeIf(p -> p.getName().equals(username));
+        if(game.getPlayers().isEmpty()) {
+            notStartedGames.remove(game);
+        }
+
+        // todo: persistence
+
+        return game;
+    }
+
+    /**
+     * this function starts the game which the player has joined
+     * @param username the player that wants to start the game
+     * @return the game started, null if: non-existing, already started, finished, not enough players
+     */
+    public Game startGame(String username){
+        Game game = findGame(username);
+        if(game == null || game.getGameState() != GameStateEnum.NOT_STARTED || game.getPlayers().size() < 2){
+            return null;
         }
 
         notStartedGames.remove(game);
@@ -112,7 +134,7 @@ public class GameService {
                      game.setActivePlayer(creator);
             }
         }
-game.setPlayDirection("clockwise");
+        game.setPlayDirection("clockwise");
         // TODO persist
 
         return game;
@@ -159,11 +181,11 @@ game.setPlayDirection("clockwise");
         for(Game game : games) {
             for(Player player : game.getPlayers()) {
                 if(player.getName().equals(username)) {
-                    return true;
+                    return game;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     public List<Game> getAllNotStartedGames() {

@@ -18,6 +18,11 @@ public class User {
     private String mail;
     private int playerId;
 
+    //User user = new User(player_id, username, passwordhash, name, email, passwordsalt);
+    public User(){
+
+    }
+
     public String getUsername() {
         return username;
     }

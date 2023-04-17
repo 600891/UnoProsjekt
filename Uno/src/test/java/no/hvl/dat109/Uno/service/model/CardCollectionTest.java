@@ -3,6 +3,8 @@ package no.hvl.dat109.Uno.service.model;
 import no.hvl.dat109.Uno.persistence.entity.Card;
 import no.hvl.dat109.Uno.service.model.CardCollection;
 import no.hvl.dat109.Uno.enums.ColorEnum;
+import no.hvl.dat109.Uno.enums.ValueEnum;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,8 +49,8 @@ public class CardCollectionTest {
 
     @Test
     void addCardAndEmptyDeck() {
-        Card blue = new Card(0, ColorEnum.BLUE);
-        Card yellow = new Card(1, ColorEnum.YELLOW);
+        Card blue = new Card(0, ColorEnum.BLUE, ValueEnum.ONE);
+        Card yellow = new Card(1, ColorEnum.YELLOW, ValueEnum.TWO);
 
         deckShuffle.emptyDeck();
         Assertions.assertEquals(deckShuffle.getDeckSize(), 0);

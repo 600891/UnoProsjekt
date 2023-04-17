@@ -9,13 +9,16 @@ import java.util.List;
 @Table(name = "game", schema = "uno")
 public class Game {
 
-    //@Id
-    //@Column(name = "game_id")
+    @Id
+    @Column(name = "game_id")
     private String uuid;
 
     //@Column(name = "active_player")
     private Player activePlayer;
 
+    private Player gameCreator;
+
+    private List<Player> players;
     //@Column(name = "game_state")
     private GameStateEnum gameState;
 
@@ -31,13 +34,13 @@ public class Game {
 
     }
 
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
+    public void setUuid(String gameId) {
+        this.uuid = gameId;
     }
 
-    /*public Player getGameCreator() {
+    public Player getGameCreator() {
         return gameCreator;
-    }*/
+    }
 
     public void setGameCreator(Player gameCreator) {
         this.gameCreator = gameCreator;

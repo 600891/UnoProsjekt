@@ -5,10 +5,14 @@ import no.hvl.dat109.Uno.enums.ValueEnum;
 
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 // todo: this entity is missing the primary key reference (@Id)
-// @Entity
+@Entity
 public class Card {
 
+    @Id
     private int id;
     private ColorEnum color;
     private ValueEnum value;
