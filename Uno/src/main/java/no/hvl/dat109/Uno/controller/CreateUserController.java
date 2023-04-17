@@ -29,7 +29,7 @@ public class CreateUserController {
     PersistenceService db;
 
     @PostMapping
-    public String registerUser(@RequestParam("player_id") Long player_id,
+    public boolean registerUser(@RequestParam("player_id") Long player_id,
                                @RequestParam("username") String username,
                                @RequestParam("passwordhash") String passwordhash,
                                @RequestParam("name") String name,
@@ -42,19 +42,19 @@ public class CreateUserController {
         //checks if user is already in database
         if (db.findUserByUsername(username) != null) {
             ra.addFlashAttribute("redirectMessage", USERNAME_ALREADY_USED_MESSAGE);
-            return "redirect:" + CREATREUSER_URL;
+            return false;
         }
 
         //checks if required information exists
         if (username == null || email == null || pword == null || pwordRep == null) {
             ra.addFlashAttribute("redirecetMessage", INVALID_REGISTRATION_MESSAGE);
-            return "redirect:" + CREATREUSER_URL;
+            return false;
         }
 
         //checks if password is equal
         if (!pwordRep.equals(pword)) {
             ra.addFlashAttribute("redirectMessage", UNEQUAL_PASSWORD_MESSAGE);
-            return "redirect:" + CREATREUSER_URL;
+            return false;
         }
 
         //Hash og salt password, adds to database
@@ -64,7 +64,7 @@ public class CreateUserController {
         User user = new User(player_id, username, passwordhash, name, email, passwordsalt);
         db.createUser(user);
         LoginUtil.loginUser(request, user);
-        return "redirect:" + CONFORMATION_URL;
+        return true;
 
     }
 }
