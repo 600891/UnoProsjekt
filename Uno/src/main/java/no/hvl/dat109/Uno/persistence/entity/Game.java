@@ -1,16 +1,15 @@
 package no.hvl.dat109.Uno.persistence.entity;
 
-import jakarta.persistence.*;
 import no.hvl.dat109.Uno.enums.GameStateEnum;
 import no.hvl.dat109.Uno.service.model.CardCollection;
 
 import java.util.List;
-@Entity
-@Table(name = "game", schema = "uno")
+//@Entity
+//@Table(name = "game", schema = "uno")
 public class Game {
 
-    @Id
-    @Column(name = "game_id")
+    //@Id
+    //@Column(name = "game_id")
     private String uuid;
 
     //@Column(name = "active_player")
@@ -23,7 +22,16 @@ public class Game {
     private GameStateEnum gameState;
 
     private CardCollection deck;
+
+    //@ElementCollection
+    //@Column (name = "Deck", columnDefinition = "TEXT", nullable = false)
+    private List<Card> databaseDeck = deck.getDeck();
+
     private CardCollection discard;
+
+    //@ElementCollection
+    //@Column (name = "Discardpile", columnDefinition = "TEXT", nullable = false)
+    private List<Card> databaseDiscardpile = discard.getDeck();
     private String playDirection;
 
     public Game() {}

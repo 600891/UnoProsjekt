@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "Player", schema = "uno")
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,12 +14,14 @@ public class Player {
     @Column(name = "name")
     private String name;
 
+    @ElementCollection
     @Column(name = "hand", columnDefinition = "TEXT")
-    @OneToMany
     private List<Card> hand;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gameId")
+    @Column(name = "game_id")
+    private String gameFKdatabase;
+
+    @Transient
     private Game gameFK;
 
 

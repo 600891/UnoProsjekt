@@ -6,16 +6,16 @@ import jakarta.persistence.Id;
 
 
 @Entity
-@Table(name = "", schema = "")
+@Table(name = "user", schema = "uno")
 public class User {
 
     @Id
     private String username;
 
-    private String passwordHash;
+    private String passwordhash;
 
     private String name;
-    private String mail;
+    private String email;
     private int playerId;
 
     //User user = new User(player_id, username, passwordhash, name, email, passwordsalt);
@@ -32,11 +32,11 @@ public class User {
     }
 
     public String getPasswordHash() {
-        return passwordHash;
+        return passwordhash;
     }
 
     public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+        this.passwordhash = passwordHash;
     }
 
     public String getName() {
@@ -48,11 +48,11 @@ public class User {
     }
 
     public String getMail() {
-        return mail;
+        return email;
     }
 
     public void setMail(String mail) {
-        this.mail = mail;
+        this.email = mail;
     }
 
     public int getPlayerId() {

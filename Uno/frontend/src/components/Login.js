@@ -16,12 +16,15 @@ function Login({ socket, stompClient }) {
   };
   const options = {
     method: "POST",
-    body: JSON.stringify(params),
+    //body: JSON.stringify(params),
     headers: { "Content-Type": "application/json" },
   };
 
   async function getServerResponse() {
-    await fetch("http://localhost:8080/login", options)
+    await fetch(
+      "http://localhost:8080/login?username=" + username + "&pword=" + password,
+      options
+    )
       .then((response) => response.text())
       .then((response) => {
         console.log("The response from loginController is: " + response);

@@ -30,7 +30,7 @@ public class PersistenceService {
 
 
     public Player findPlayerByUsername(String username) {
-        return playerRepo.findPlayerByUsername(username);
+        return playerRepo.findPlayerByName(username);
     }
 
     public void saveGame(Game game) {

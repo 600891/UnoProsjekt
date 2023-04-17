@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CardCollection {
+public class CardCollection{
 
     private List<Card> deck = new ArrayList<>();
 

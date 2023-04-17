@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface PlayerRepo extends JpaRepository<Player, Integer> {
 
-    Player findPlayerByUsername(String username);
+    Player findPlayerByName(String name);
 }
