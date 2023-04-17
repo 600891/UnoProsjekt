@@ -29,7 +29,7 @@ Registrering ble desverre ikke ferdig, så det er lagt inn test-brukere man kan 
 Logg inn med to av testbrukerne fra tabellen over, i hver sine nettlesere
 ![login](./Uno/UnoBilder/login.png)
 
-Du er nå i lobbyen. Trykk Create new game session på en av brukerne
+Du er nå i lobbyen. Trykk *Create new game session* på en av brukerne
 ![lobby 1](./Uno/UnoBilder/lobby1.png)
 
 Spillet er nå opprettet, og man kan se hvor mange spillere som er med. Spillet kan ikke startes før det er minst to spillere med.
